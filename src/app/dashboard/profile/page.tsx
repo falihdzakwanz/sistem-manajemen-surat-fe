@@ -40,7 +40,7 @@ export default function ProfilePage() {
                 Nama Lengkap / email_instansi
               </h3>
               <p className="text-lg text-gray-800 font-medium">
-                {currentUser?.name} ({currentUser?.email_instansi})
+                {currentUser?.nama_instansi} ({currentUser?.email_instansi})
               </p>
             </div>
 
