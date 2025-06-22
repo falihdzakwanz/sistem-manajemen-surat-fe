@@ -8,10 +8,20 @@ import { motion } from "framer-motion";
 interface ReceiverFormProps {
   initialData?: {
     id?: number;
-    nama: string;
-    email: string;
+    nama_instansi: string;
+    email_instansi: string;
+    email_instansi: string;
+    role: "user";
+    password: string;
+    created_at?: string;
+    updated_at?: string;
   };
-  onSubmit: (data: { nama: string; email: string }) => Promise<void>;
+  onSubmit: (data: {
+    nama_instansi: string;
+    email_instansi: string;
+    password: string;
+    role: "user";
+  }) => Promise<void>;
   loading?: boolean;
 }
 
@@ -20,21 +30,36 @@ export default function ReceiverForm({
   onSubmit,
   loading,
 }: ReceiverFormProps) {
-  const [nama, setNama] = useState(initialData?.nama || "");
-  const [email, setEmail] = useState(initialData?.email || "");
+  const now = new Date().toISOString();
+
+  const [formData, setFormData] = useState({
+    nama_instansi: initialData?.nama_instansi || "",
+    email_instansi: initialData?.email_instansi || "",
+    email_instansi: initialData?.email_instansi || "",
+    password: initialData?.password || "",
+    created_at: initialData?.created_at || now,
+    updated_at: now,
+    role: initialData?.role || "user",
+  });
+
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!nama || !email) {
+    if (!formData.nama_instansi || !formData.email_instansi) {
       setError("Nama dan email harus diisi");
       return;
     }
 
     try {
-      await onSubmit({ nama, email });
+      await onSubmit({
+        nama_instansi: formData.nama_instansi,
+        email_instansi: formData.email_instansi,
+        password: formData.password,
+        role: formData.role,
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save receiver");
     }
@@ -53,18 +78,33 @@ export default function ReceiverForm({
       )}
 
       <Input
-        label="Nama Penerima"
-        value={nama}
-        onChange={(e) => setNama(e.target.value)}
+        label="Nama Instansi"
+        value={formData.nama_instansi}
+        onChange={(e) =>
+          setFormData({ ...formData, nama_instansi: e.target.value })
+        }
         required
+        className="text-black"
       />
 
       <Input
         label="Email"
         type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={formData.email_instansi}
+        onChange={(e) =>
+          setFormData({ ...formData, email_instansi: e.target.value })
+        }
         required
+        className="text-black"
+      />
+
+      <Input
+        label="Password"
+        type="password"
+        value={formData.password}
+        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+        required
+        className="text-black"
       />
 
       <Button type="submit" disabled={loading} className="w-full">

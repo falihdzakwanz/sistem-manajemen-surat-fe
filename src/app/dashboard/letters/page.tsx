@@ -1,39 +1,39 @@
-import useLetters from "@/lib/hooks/useLetters";
+"use client";
+
+import { useState } from "react";
+import useAuth from "@/lib/hooks/useAuth";
 import LetterCard from "@/components/dashboard/LetterCard";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
-import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { dummyLetters } from "@/lib/dummy";
 
 export default function LettersPage() {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
-  const { letters, loading, error, updateLetterStatus, deleteLetter } =
-    useLetters(token);
+  const { user } = useAuth();
+  const [letters, setLetters] = useState(dummyLetters);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  const filteredLetters =
+    user?.id === 0
+      ? letters
+      : letters.filter((l) => l.penerima_id === user?.id);
 
-  if (error) {
-    return <div className="text-red-500 p-4">{error}</div>;
-  }
+  const updateLetterStatus = (id: number, status: "diterima" | "pending") => {
+    setLetters((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));
+  };
 
   return (
-    <div className="space-y-6">
+    <div className="ml-64 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Surat Masuk</h1>
-        <Link href="/dashboard/letters/add">
-          <Button>+ Tambah Surat</Button>
-        </Link>
+        {user?.id === 0 && (
+          <Link href="/dashboard/letters/add">
+            <Button>+ Tambah Surat</Button>
+          </Link>
+        )}
       </div>
 
-      {letters.length === 0 ? (
+      {filteredLetters.length === 0 ? (
         <AnimatedDiv className="text-center py-12">
           <p className="text-gray-500">Belum ada surat yang tercatat</p>
         </AnimatedDiv>
@@ -41,15 +41,11 @@ export default function LettersPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-          {letters.map((letter, index) => (
+          {filteredLetters.map((letter, index) => (
             <AnimatedDiv key={letter.id} delay={index * 0.05}>
-              <LetterCard
-                letter={letter}
-                onStatusChange={updateLetterStatus}
-                onDelete={deleteLetter}
-              />
+              <LetterCard letter={letter} onStatusChange={updateLetterStatus} />
             </AnimatedDiv>
           ))}
         </motion.div>

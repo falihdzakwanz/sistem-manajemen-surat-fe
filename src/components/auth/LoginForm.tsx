@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import useAuth from "@/lib/hooks/useAuth";
 
 export default function LoginForm() {
-  const [username, setUsername] = useState("");
+  const [email_instansi, setEmail_instansi] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export default function LoginForm() {
     setError("");
 
     try {
-      await login(username, password);
+      await login(email_instansi, password);
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
@@ -43,11 +43,12 @@ export default function LoginForm() {
       )}
 
       <Input
-        label="Username"
+        label="Email"
         type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={email_instansi}
+        onChange={(e) => setEmail_instansi(e.target.value)}
         required
+        className="text-black"
       />
 
       <Input
@@ -56,6 +57,7 @@ export default function LoginForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        className="text-black"
       />
 
       <Button type="submit" disabled={loading} className="w-full">

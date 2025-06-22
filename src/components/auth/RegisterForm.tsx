@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
-    username: "",
+    email_instansi: "",
     name: "",
     password: "",
     confirmPassword: "",
@@ -40,7 +40,7 @@ export default function RegisterForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: formData.username,
+          email_instansi: formData.email_instansi,
           name: formData.name,
           password: formData.password,
         }),
@@ -72,13 +72,14 @@ export default function RegisterForm() {
       )}
 
       <Input
-        label="Username"
-        name="username"
+        label="email_instansi"
+        name="email_instansi"
         type="text"
-        value={formData.username}
+        value={formData.email_instansi}
         onChange={handleChange}
         required
         minLength={3}
+        className="text-black"
       />
 
       <Input
@@ -88,6 +89,7 @@ export default function RegisterForm() {
         value={formData.name}
         onChange={handleChange}
         required
+        className="text-black"
       />
 
       <Input
@@ -98,6 +100,7 @@ export default function RegisterForm() {
         onChange={handleChange}
         required
         minLength={6}
+        className="text-black"
       />
 
       <Input
@@ -108,6 +111,7 @@ export default function RegisterForm() {
         onChange={handleChange}
         required
         minLength={6}
+        className="text-black"
       />
 
       <Button type="submit" disabled={loading} className="w-full">

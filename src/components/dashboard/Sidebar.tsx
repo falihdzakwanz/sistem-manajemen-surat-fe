@@ -1,5 +1,6 @@
 "use client";
 
+import useAuth from "@/lib/hooks/useAuth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -9,35 +10,48 @@ import {
   FiUsers,
   FiFilePlus,
   FiUserPlus,
+  FiHome,
 } from "react-icons/fi";
 
-const navItems = [
-  { href: "/dashboard", icon: <FiInbox />, label: "Surat Masuk" },
-  {
-    href: "/dashboard/letters/add",
-    icon: <FiFilePlus />,
-    label: "Tambah Surat",
-  },
-  { href: "/dashboard/receivers", icon: <FiUsers />, label: "Penerima" },
-  {
-    href: "/dashboard/receivers/add",
-    icon: <FiUserPlus />,
-    label: "Tambah Penerima",
-  },
-];
-
 export default function Sidebar() {
+  const { user } = useAuth();
   const pathname = usePathname();
+
+  const baseNav = [
+    { href: "/dashboard", icon: <FiHome />, label: "Dashboard" },
+  ];
+
+  const userNav = [
+    { href: "/dashboard/letters", icon: <FiInbox />, label: "Surat Masuk" },
+  ];
+
+  const adminNav = [
+    {
+      href: "/dashboard/letters/add",
+      icon: <FiFilePlus />,
+      label: "Tambah Surat",
+    },
+    { href: "/dashboard/receivers", icon: <FiUsers />, label: "Penerima" },
+    {
+      href: "/dashboard/receivers/add",
+      icon: <FiUserPlus />,
+      label: "Tambah Penerima",
+    },
+  ];
+
+  const navItems = [
+    ...baseNav,
+    ...(user?.role === "admin" ? [...userNav, ...adminNav] : userNav),
+  ];
 
   return (
     <motion.div
       initial={{ x: -20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="hidden md:block w-64 bg-white shadow-md fixed h-full"
+      className="block w-64 bg-white shadow-md fixed h-full z-50"
     >
-      <div className="p-4">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Menu</h2>
+      <div className="ml-2 p-4">
         <nav className="space-y-2">
           {navItems.map((item) => (
             <Link href={item.href} key={item.href}>

@@ -1,24 +1,27 @@
 "use client";
 
+import auth from "@/lib/hooks/useAuth";
 import { motion } from "framer-motion";
 import { Letter } from "@/types";
 import LetterStatusBadge from "./LetterStatusBadge";
 import { formatDate } from "@/lib/utils";
 import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
+import { FiEye, FiEdit2, FiFileText, FiInbox } from "react-icons/fi";
+import useAuth from "@/lib/hooks/useAuth";
 
 interface LetterCardProps {
   letter: Letter;
-  onStatusChange?: (id: number, status: string) => void;
-  onDelete?: (id: number) => void;
+  onStatusChange?: (id: number, status: "diterima" | "pending") => void;
+  onEdit?: (id: number) => void;
 }
 
 export default function LetterCard({
   letter,
   onStatusChange,
-  onDelete,
 }: LetterCardProps) {
   const router = useRouter();
+  const { user } = useAuth();
 
   return (
     <motion.div
@@ -51,52 +54,51 @@ export default function LetterCard({
 
         <div className="mt-4 flex space-x-2">
           <Button
-            variant="outline"
+            variant="primary"
             size="sm"
+            className="flex items-center gap-1"
             onClick={() =>
               router.push(`/dashboard/letters/${letter.nomor_registrasi}`)
             }
           >
-            Detail
+            <FiEye /> Detail
           </Button>
           <Button
-            variant="outline"
             size="sm"
+            className="flex items-center gap-1 bg-slate-600 hover:bg-slate-700 focus:ring-slate-500"
             onClick={() => window.open(letter.file_url, "_blank")}
           >
-            Lihat File
+            <FiFileText /> Lihat File
           </Button>
-          {onDelete && (
+          {user?.id === 0 && (
             <Button
-              variant="danger"
               size="sm"
-              onClick={() => onDelete(letter.nomor_registrasi)}
+              className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
+              onClick={() =>
+                router.push(
+                  `/dashboard/letters/${letter.nomor_registrasi}/edit`
+                )
+              }
             >
-              Hapus
+              <FiEdit2 /> Edit
             </Button>
           )}
-        </div>
 
-        {onStatusChange && letter.status === "pending" && (
-          <div className="mt-3 flex space-x-2">
+          {user?.id !== 0 && letter.status === "pending" && (
             <Button
               variant="success"
               size="sm"
+              className="flex items-center gap-1 bg-green-600 hover:bg-green-700 focus:ring-green-500"
               onClick={() =>
-                onStatusChange(letter.nomor_registrasi, "diterima")
+                onStatusChange?.(letter.nomor_registrasi, "diterima")
               }
             >
+              {" "}
+              <FiInbox />
               Terima
             </Button>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => onStatusChange(letter.nomor_registrasi, "ditolak")}
-            >
-              Tolak
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </motion.div>
   );

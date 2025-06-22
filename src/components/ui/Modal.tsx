@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode } from "react";
 
 interface ModalProps {
@@ -16,44 +16,43 @@ export default function Modal({
   children,
   title,
 }: ModalProps) {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div
-          className="fixed inset-0 transition-opacity"
-          aria-hidden="true"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          key="modal"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           onClick={onClose}
         >
-          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-        </div>
-
-        <span
-          className="hidden sm:inline-block sm:align-middle sm:h-screen"
-          aria-hidden="true"
-        >
-          &#8203;
-        </span>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modal-headline"
-        >
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            {title && (
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                {title}
-              </h3>
-            )}
-            {children}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-lg shadow-xl w-full max-w-2xl p-0 relative overflow-hidden"
+          >
+            <div className="p-6 max-h-[80vh] overflow-y-auto scrollbar-hidden rounded-b-2xl">
+              <button
+                onClick={onClose}
+                className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl"
+                aria-label="Tutup modal"
+              >
+                &times;
+              </button>
+              {title && (
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                  {title}
+                </h3>
+              )}
+              {children}
+            </div>
+          </motion.div>
         </motion.div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }

@@ -10,6 +10,7 @@ import LetterStatusBadge from "@/components/dashboard/LetterStatusBadge";
 import { formatDate } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { dummyLetters } from "@/lib/dummy";
 
 export default function LetterDetailPage() {
   const { id } = useParams();
@@ -19,20 +20,31 @@ export default function LetterDetailPage() {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
 
-  useEffect(() => {
-    const fetchLetter = async () => {
-      try {
-        const { data } = await apiClient.get(`/surat/${id}`, token);
-        setLetter(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch letter");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchLetter = async () => {
+  //     try {
+  //       const { data } = await apiClient.get(`/surat/${id}`, token);
+  //       setLetter(data);
+  //     } catch (err) {
+  //       setError(err instanceof Error ? err.message : "Failed to fetch letter");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchLetter();
-  }, [id, token]);
+  //   fetchLetter();
+  // }, [id, token]);
+
+  useEffect(() => {
+    const regId = Number(id);
+    const found = dummyLetters.find((l) => l.nomor_registrasi === regId);
+    if (found) {
+      setLetter(found);
+    } else {
+      setError("Surat tidak ditemukan");
+    }
+    setLoading(false);
+  }, [id]);
 
   if (loading) {
     return (
@@ -51,7 +63,7 @@ export default function LetterDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="ml-64 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Letter Details</h1>
         <Link href="/dashboard/letters">
@@ -138,19 +150,10 @@ export default function LetterDetailPage() {
           </div>
 
           <div className="mt-6 flex space-x-3">
+            {}
             <Link href={`/dashboard/letters/${id}/edit`}>
               <Button variant="outline">Edit</Button>
             </Link>
-            <Button
-              variant="danger"
-              onClick={() => {
-                if (confirm("Are you sure you want to delete this letter?")) {
-                  // Implement delete functionality
-                }
-              }}
-            >
-              Delete
-            </Button>
           </div>
         </motion.div>
       </AnimatedDiv>

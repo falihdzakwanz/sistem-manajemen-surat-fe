@@ -3,17 +3,17 @@ import { apiClient } from "@/app/api/client";
 
 export async function POST(request: Request) {
   try {
-    const { username, password } = await request.json();
+    const { email_instansi, password } = await request.json();
 
-    if (!username || !password) {
+    if (!email_instansi || !password) {
       return NextResponse.json(
-        { error: "Username and password are required" },
+        { error: "email_instansi and password are required" },
         { status: 400 }
       );
     }
 
     const response = await apiClient.post("/users/login", {
-      username,
+      email_instansi,
       password,
     });
 

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import useAuth from "@/lib/hooks/useAuth";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
@@ -8,7 +8,7 @@ export default function DashboardPage() {
   const { user } = useAuth();
 
   return (
-    <div className="space-y-6">
+    <div className="ml-64 space-y-6">
       <AnimatedDiv>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

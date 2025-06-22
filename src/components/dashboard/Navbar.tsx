@@ -3,9 +3,9 @@
 import useAuth from "@/lib/hooks/useAuth";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
-
+import { FiLogOut } from "react-icons/fi";
 interface NavbarProps {
-  user: { name: string; username: string } | null;
+  user: { name: string; email_instansi: string } | null;
 }
 
 export default function Navbar({ user }: NavbarProps) {
@@ -18,14 +18,19 @@ export default function Navbar({ user }: NavbarProps) {
       className="fixed w-full bg-white shadow-sm z-10"
     >
       <div className="flex items-center justify-between h-16 px-6">
-        <div className="flex items-center">
+        <div className="flex items-center ">
           <h1 className="text-xl font-bold text-gray-800">Surat Management</h1>
         </div>
 
         <div className="flex items-center space-x-4">
           <span className="text-gray-700">{user?.name}</span>
-          <Button variant="outline" size="sm" onClick={logout}>
-            Logout
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={logout}
+            className="flex items-center gap-1"
+          >
+            <FiLogOut /> Logout
           </Button>
         </div>
       </div>

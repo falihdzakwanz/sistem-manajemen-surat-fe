@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { Receiver } from "@/types";
+import { dummyUser } from "@/lib/dummy";
 
 interface LetterFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
@@ -57,6 +58,7 @@ export default function LetterForm({
           name="pengirim"
           defaultValue={initialData?.pengirim || defaultPengirim}
           required
+          className="text-black"
         />
 
         <Input
@@ -64,6 +66,7 @@ export default function LetterForm({
           name="tujuan"
           defaultValue={initialData?.tujuan}
           required
+          className="text-black"
         />
 
         <Input
@@ -71,6 +74,7 @@ export default function LetterForm({
           name="nomor_surat"
           defaultValue={initialData?.nomor_surat}
           required
+          className="text-black"
         />
 
         <Input
@@ -79,6 +83,7 @@ export default function LetterForm({
           type="date"
           defaultValue={initialData?.tanggal_surat}
           required
+          className="text-black"
         />
 
         <Input
@@ -87,9 +92,10 @@ export default function LetterForm({
           type="date"
           defaultValue={initialData?.tanggal_masuk}
           required
+          className="text-black"
         />
 
-        <div className="space-y-1">
+        <div className="space-y-1 text-black">
           <label className="block text-sm font-medium text-gray-700">
             Penerima
           </label>
@@ -100,11 +106,13 @@ export default function LetterForm({
             required
           >
             <option value="">Pilih Penerima</option>
-            {receivers.map((receiver) => (
-              <option key={receiver.id} value={receiver.id}>
-                {receiver.nama} ({receiver.email})
-              </option>
-            ))}
+            {dummyUser
+              .filter((user) => user.role !== "admin")
+              .map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.nama_instansi} ({user.email_instansi})
+                </option>
+              ))}
           </select>
         </div>
       </div>
@@ -114,6 +122,7 @@ export default function LetterForm({
         name="perihal"
         defaultValue={initialData?.perihal}
         required
+        className="text-black"
       />
 
       <div className="space-y-1">
@@ -124,7 +133,7 @@ export default function LetterForm({
           type="file"
           name="file"
           accept=".pdf,.doc,.docx"
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           required={!initialData}
         />
       </div>

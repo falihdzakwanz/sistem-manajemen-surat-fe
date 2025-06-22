@@ -1,5 +1,5 @@
 export interface User {
-  username: string;
+  email_instansi: string;
   name: string;
   token?: string;
 }
@@ -23,7 +23,7 @@ export interface Letter {
   tanggal_surat: string | Date;
   perihal: string;
   file_url: string;
-  status: "pending" | "diterima" | "ditolak";
+  status: "pending" | "diterima";
   penerima_id: number;
   penerima?: Receiver;
   created_at?: string | Date;
