@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import useAuth from "@/lib/hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
 import LetterCard from "@/components/dashboard/LetterCard";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";

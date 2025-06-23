@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import { ReactNode } from "react";
 import Navbar from "@/components/dashboard/Navbar";
 import Sidebar from "@/components/dashboard/Sidebar";
-import useAuth from "@/lib/hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 
 interface DashboardLayoutProps {

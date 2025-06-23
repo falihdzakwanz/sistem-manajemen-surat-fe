@@ -1,6 +1,6 @@
 "use client";
 
-import useAuth from "@/lib/hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import { FiLogOut } from "react-icons/fi";

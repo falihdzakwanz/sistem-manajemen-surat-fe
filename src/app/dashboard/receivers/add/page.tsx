@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import ReceiverForm from "@/components/dashboard/ReceiverForm";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
-import useReceivers from "@/lib/hooks/useReceivers";
+import useReceivers from "@/hooks/useReceivers";
 
 export default function AddReceiverPage() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 "use client";
 
-import auth from "@/lib/hooks/useAuth";
+import auth from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import { Letter } from "@/types";
 import LetterStatusBadge from "./LetterStatusBadge";
@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
 import { FiEye, FiEdit2, FiFileText, FiInbox } from "react-icons/fi";
-import useAuth from "@/lib/hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
 
 interface LetterCardProps {
   letter: Letter;

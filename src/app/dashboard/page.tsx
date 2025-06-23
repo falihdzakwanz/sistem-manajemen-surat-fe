@@ -1,6 +1,6 @@
 "use client";
 
-import useAuth from "@/lib/hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
 
