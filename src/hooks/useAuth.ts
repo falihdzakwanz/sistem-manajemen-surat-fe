@@ -3,13 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/app/api/client";
-
-interface User {
-  id: number;
-  email_instansi: string;
-  nama_instansi: string;
-  role: "admin" | "user";
-}
+import { User } from "@/types";
 
 export default function useAuth() {
   const [user, setUser] = useState<User | null>(null);

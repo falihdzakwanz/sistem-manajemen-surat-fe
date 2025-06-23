@@ -16,7 +16,7 @@ export default function DashboardPage() {
           className="bg-white rounded-xl shadow-md p-6"
         >
           <h1 className="text-2xl font-bold text-gray-800">
-            Welcome, {user?.name}
+            Welcome, {user?.nama_instansi}
           </h1>
           <p className="text-gray-600 mt-2">
             You can manage your letters and receivers from here

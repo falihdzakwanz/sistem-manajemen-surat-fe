@@ -4,8 +4,9 @@ import useAuth from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import { FiLogOut } from "react-icons/fi";
+import { User } from "@/types";
 interface NavbarProps {
-  user: { name: string; email_instansi: string } | null;
+  user: User | null;
 }
 
 export default function Navbar({ user }: NavbarProps) {
@@ -19,11 +20,11 @@ export default function Navbar({ user }: NavbarProps) {
     >
       <div className="flex items-center justify-between h-16 px-6">
         <div className="flex items-center ">
-          <h1 className="text-xl font-bold text-gray-800">Surat Management</h1>
+          <h1 className="text-xl font-bold text-gray-800">Manajemen Surat</h1>
         </div>
 
         <div className="flex items-center space-x-4">
-          <span className="text-gray-700">{user?.name}</span>
+          <span className="text-gray-700">{user?.nama_instansi}</span>
           <Button
             variant="danger"
             size="sm"

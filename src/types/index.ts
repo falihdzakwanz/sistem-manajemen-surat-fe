@@ -1,7 +1,9 @@
 export interface User {
+  id: number;
   email_instansi: string;
-  name: string;
+  nama_instansi: string;
   token?: string;
+  role: "admin" | "user";
 }
 
 export interface Receiver {

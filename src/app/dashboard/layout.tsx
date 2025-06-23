@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 import Navbar from "@/components/dashboard/Navbar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import useAuth from "@/hooks/useAuth";
-import { redirect } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -20,10 +19,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
     );
   }
-
-  // if (!user) {
-  //   redirect("/login");
-  // }
 
   return (
     <div className="min-h-screen bg-gray-50">

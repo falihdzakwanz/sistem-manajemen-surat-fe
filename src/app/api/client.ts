@@ -4,7 +4,7 @@ export const apiClient = {
   async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = localStorage.getItem('token');
-    
+
     const headers = {
       "Content-Type": "application/json",
       ...(token && { "X-API-TOKEN": token }),
@@ -12,7 +12,7 @@ export const apiClient = {
     };
 
     const response = await fetch(url, { ...options, headers });
-    console.log(response);
+    
     if (!response.ok) {
       // Handle 401 unauthorized
       if (response.status === 401) {
