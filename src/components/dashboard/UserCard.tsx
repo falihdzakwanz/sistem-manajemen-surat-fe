@@ -3,12 +3,13 @@
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import { formatDate } from "@/lib/utils";
-import { User } from "@/lib/dummy";
+import { User } from "@/types";
 
 interface ReceiverCardProps {
   receiver: User;
   onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
+  onClick?: () => void;
 }
 
 export default function ReceiverCard({

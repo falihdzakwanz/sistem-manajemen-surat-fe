@@ -4,15 +4,9 @@ export interface User {
   nama_instansi: string;
   token?: string;
   role: "admin" | "user";
-}
-
-export interface Receiver {
-  id: number;
-  nama: string;
-  email: string;
-  total_surat?: number;
-  created_at?: string;
-  updated_at?: string;
+  total_surat: number;
+  created_at?: string | Date;
+  updated_at?: string | Date;
 }
 
 export interface Letter {
@@ -27,7 +21,7 @@ export interface Letter {
   file_url: string;
   status: "pending" | "diterima";
   penerima_id: number;
-  penerima?: Receiver;
+  penerima?: User;
   created_at?: string | Date;
   updated_at?: string | Date;
 }

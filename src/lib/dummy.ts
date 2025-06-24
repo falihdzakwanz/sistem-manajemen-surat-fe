@@ -1,4 +1,4 @@
-import { Receiver } from "@/types";
+// import { Receiver } from "@/types";
 
 // Dummy Data File for Letters and Receivers
 export interface User {

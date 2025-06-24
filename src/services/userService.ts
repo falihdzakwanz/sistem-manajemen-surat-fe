@@ -7,20 +7,20 @@ export const userService = {
     nama_instansi: string;
     role: "admin" | "user";
   }) {
-    return apiClient.post("/users", data);
+    return apiClient.post("/api/users", data);
   },
 
   async updateProfile(data: { nama_instansi?: string; password?: string }) {
-    return apiClient.patch("/users/current", data);
+    return apiClient.patch("/api/users/current", data);
   },
 
   // For admin only
   async getAllUsers() {
-    return apiClient.get("/users");
+    return apiClient.get("/api/users");
   },
 
   // For admin only
   async deleteUser(id: number) {
-    return apiClient.delete(`/users/${id}`);
+    return apiClient.delete(`/api/users/${id}`);
   },
 };

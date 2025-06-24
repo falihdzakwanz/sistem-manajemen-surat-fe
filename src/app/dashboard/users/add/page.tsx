@@ -1,23 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import ReceiverForm from "@/components/dashboard/ReceiverForm";
+import ReceiverForm from "@/components/dashboard/UserForm";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
-import useReceivers from "@/hooks/useReceivers";
+import { userService } from "@/services/userService";
 
-export default function AddReceiverPage() {
+export default function AddUserPage() {
   const router = useRouter();
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
-  const { createReceiver } = useReceivers(token);
 
-  const handleSubmit = async (data: { nama: string; email: string }) => {
+  const handleSubmit = async (data: {
+    nama_instansi: string;
+    email_instansi: string;
+    password: string;
+    role: "user";
+  }) => {
     try {
-      await createReceiver(data);
+      await userService.register({
+        nama_instansi: data.nama_instansi,
+        email_instansi: data.email_instansi,
+        password: data.password,
+        role: "user",
+      });
       router.push("/dashboard/receivers");
     } catch (error) {
       console.error("Failed to create receiver:", error);
+      throw error; // This will be caught in the form component
     }
   };
 
@@ -30,7 +38,7 @@ export default function AddReceiverPage() {
           className="bg-white rounded-xl shadow-md p-6"
         >
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
-            Add New Receiver
+            Add New User
           </h1>
           <ReceiverForm onSubmit={handleSubmit} />
         </motion.div>
