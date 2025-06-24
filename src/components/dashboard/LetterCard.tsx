@@ -1,6 +1,5 @@
 "use client";
 
-import auth from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import { Letter } from "@/types";
 import LetterStatusBadge from "./LetterStatusBadge";
@@ -8,20 +7,19 @@ import { formatDate } from "@/lib/utils";
 import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
 import { FiEye, FiEdit2, FiFileText, FiInbox } from "react-icons/fi";
-import useAuth from "@/hooks/useAuth";
 
 interface LetterCardProps {
   letter: Letter;
   onStatusChange?: (id: number, status: "diterima" | "pending") => void;
-  onEdit?: (id: number) => void;
+  isAdmin: boolean;
 }
 
 export default function LetterCard({
   letter,
   onStatusChange,
+  isAdmin,
 }: LetterCardProps) {
   const router = useRouter();
-  const { user } = useAuth();
 
   return (
     <motion.div
@@ -52,7 +50,7 @@ export default function LetterCard({
           </p>
         </div>
 
-        <div className="mt-4 flex space-x-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           <Button
             variant="primary"
             size="sm"
@@ -63,14 +61,18 @@ export default function LetterCard({
           >
             <FiEye /> Detail
           </Button>
-          <Button
-            size="sm"
-            className="flex items-center gap-1 bg-slate-600 hover:bg-slate-700 focus:ring-slate-500"
-            onClick={() => window.open(letter.file_url, "_blank")}
-          >
-            <FiFileText /> Lihat File
-          </Button>
-          {user?.id === 0 && (
+
+          {letter.file_url && (
+            <Button
+              size="sm"
+              className="flex items-center gap-1 bg-slate-600 hover:bg-slate-700 focus:ring-slate-500"
+              onClick={() => window.open(letter.file_url, "_blank")}
+            >
+              <FiFileText /> Lihat File
+            </Button>
+          )}
+
+          {isAdmin && (
             <Button
               size="sm"
               className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
@@ -84,7 +86,7 @@ export default function LetterCard({
             </Button>
           )}
 
-          {user?.id !== 0 && letter.status === "pending" && (
+          {!isAdmin && letter.status === "pending" && (
             <Button
               variant="success"
               size="sm"
@@ -93,7 +95,6 @@ export default function LetterCard({
                 onStatusChange?.(letter.nomor_registrasi, "diterima")
               }
             >
-              {" "}
               <FiInbox />
               Terima
             </Button>

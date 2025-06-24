@@ -2,27 +2,27 @@ import { apiClient } from "@/app/api/client";
 
 export const letterService = {
   async createLetter(formData: FormData) {
-    return apiClient.upload("/surat", formData);
+    return apiClient.upload("/api/surat", formData);
   },
 
   async getLetters(forCurrentUser = false) {
-    const endpoint = forCurrentUser ? "/surat/me" : "/surat";
+    const endpoint = forCurrentUser ? "/api/surat/me" : "/api/surat";
     return apiClient.get(endpoint);
   },
 
   async getLetterDetails(nomorRegistrasi: number) {
-    return apiClient.get(`/surat/${nomorRegistrasi}`);
+    return apiClient.get(`/api/surat/${nomorRegistrasi}`);
   },
 
   async updateLetterStatus(
     nomorRegistrasi: number,
     status: "pending" | "diterima"
   ) {
-    return apiClient.patch(`/surat/${nomorRegistrasi}/status`, { status });
+    return apiClient.patch(`/api/surat/${nomorRegistrasi}/status`, { status });
   },
 
   async updateLetter(nomorRegistrasi: number, formData: FormData) {
-    return apiClient.upload(`/surat/${nomorRegistrasi}`, formData);
+    return apiClient.upload(`/api/surat/${nomorRegistrasi}`, formData);
   },
 
   async downloadLetterFile(nomorRegistrasi: number) {
@@ -46,6 +46,6 @@ export const letterService = {
   },
 
   async deleteLetter(nomorRegistrasi: number) {
-    return apiClient.delete(`/surat/${nomorRegistrasi}`);
+    return apiClient.delete(`/api/surat/${nomorRegistrasi}`);
   },
 };

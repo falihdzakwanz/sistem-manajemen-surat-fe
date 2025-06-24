@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   FiInbox,
-  FiSend,
   FiUsers,
   FiFilePlus,
   FiUserPlus,
@@ -31,9 +30,9 @@ export default function Sidebar() {
       icon: <FiFilePlus />,
       label: "Tambah Surat",
     },
-    { href: "/dashboard/receivers", icon: <FiUsers />, label: "Penerima" },
+    { href: "/dashboard/users", icon: <FiUsers />, label: "Penerima" },
     {
-      href: "/dashboard/receivers/add",
+      href: "/dashboard/users/add",
       icon: <FiUserPlus />,
       label: "Tambah Penerima",
     },

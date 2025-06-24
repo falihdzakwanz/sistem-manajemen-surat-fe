@@ -5,22 +5,19 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import { Receiver } from "@/types";
-import { dummyUser } from "@/lib/dummy";
+import { User } from "@/types";
 
 interface LetterFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
-  receivers: Receiver[];
+  users: User[];
   loading: boolean;
-  defaultPengirim?: string;
   initialData?: any;
 }
 
 export default function LetterForm({
   onSubmit,
-  receivers,
+  users,
   loading,
-  defaultPengirim = "",
   initialData,
 }: LetterFormProps) {
   const router = useRouter();
@@ -56,15 +53,7 @@ export default function LetterForm({
         <Input
           label="Pengirim"
           name="pengirim"
-          defaultValue={initialData?.pengirim || defaultPengirim}
-          required
-          className="text-black"
-        />
-
-        <Input
-          label="Tujuan"
-          name="tujuan"
-          defaultValue={initialData?.tujuan}
+          defaultValue={initialData?.pengirim}
           required
           className="text-black"
         />
@@ -81,7 +70,7 @@ export default function LetterForm({
           label="Tanggal Surat"
           name="tanggal_surat"
           type="date"
-          defaultValue={initialData?.tanggal_surat}
+          defaultValue={initialData?.tanggal_surat?.split("T")[0]} // Format date for input
           required
           className="text-black"
         />
@@ -90,7 +79,7 @@ export default function LetterForm({
           label="Tanggal Masuk"
           name="tanggal_masuk"
           type="date"
-          defaultValue={initialData?.tanggal_masuk}
+          defaultValue={initialData?.tanggal_masuk?.split("T")[0]} // Format date for input
           required
           className="text-black"
         />
@@ -100,21 +89,30 @@ export default function LetterForm({
             Penerima
           </label>
           <select
-            name="penerima_id"
-            defaultValue={initialData?.penerima_id}
+            name="user_id" // Changed to match API spec
+            defaultValue={
+              initialData?.penerima?.user_id || initialData?.user_id
+            }
             className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             required
+            disabled={loading}
           >
             <option value="">Pilih Penerima</option>
-            {dummyUser
-              .filter((user) => user.role !== "admin")
-              .map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.nama_instansi} ({user.email_instansi})
-                </option>
-              ))}
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.nama_instansi} ({user.email_instansi})
+              </option>
+            ))}
           </select>
         </div>
+
+        <Input
+          label="Tujuan"
+          name="tujuan"
+          defaultValue={initialData?.tujuan}
+          required
+          className="text-black"
+        />
       </div>
 
       <Input
@@ -134,16 +132,27 @@ export default function LetterForm({
           name="file"
           accept=".pdf,.doc,.docx"
           className="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          required={!initialData}
+          required={!initialData?.file_url} // Only required for new letters
+          disabled={loading}
         />
+        {initialData?.file_url && (
+          <p className="text-sm text-gray-500 mt-1">
+            Current file: {initialData.file_url.split("/").pop()}
+          </p>
+        )}
       </div>
 
       <div className="flex justify-end space-x-3 pt-4">
-        <Button type="button" variant="outline" onClick={() => router.back()}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+          disabled={loading}
+        >
           Cancel
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? "Saving..." : "Save Letter"}
+          {loading ? "Menyimpan..." : "Simpan Surat"}
         </Button>
       </div>
     </form>

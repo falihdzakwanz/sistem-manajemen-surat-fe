@@ -1,25 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import LetterForm from "@/components/dashboard/LetterForm";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
-import useReceivers from "@/hooks/useReceivers";
 import useAuth from "@/hooks/useAuth";
 import { apiClient } from "@/app/api/client";
+import { userService } from "@/services/userService";
 
 export default function AddLetterPage() {
   const router = useRouter();
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
-  const { receivers, loading: receiversLoading } = useReceivers(token);
   const { user } = useAuth();
-
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        if (user?.id === 0) {
+          // Only admin can fetch all users
+          const response = await userService.getAllUsers();
+          setUsers(response.data);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch users");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [user?.id]);
 
   const handleSubmit = async (formData: FormData) => {
     try {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || ""
+          : "";
       const response = await apiClient.upload("/surat", formData, token);
       router.push(`/dashboard/letters/${response.data.nomor_registrasi}`);
     } catch (err) {
@@ -49,12 +70,7 @@ export default function AddLetterPage() {
             </motion.div>
           )}
 
-          <LetterForm
-            onSubmit={handleSubmit}
-            receivers={receivers}
-            loading={receiversLoading}
-            defaultPengirim={user?.name || ""}
-          />
+          <LetterForm onSubmit={handleSubmit} users={users} loading={loading} />
         </motion.div>
       </AnimatedDiv>
     </div>
