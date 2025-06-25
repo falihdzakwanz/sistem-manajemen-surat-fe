@@ -20,8 +20,7 @@ export default function AddLetterPage() {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        if (user?.id === 0) {
-          // Only admin can fetch all users
+        if (user?.role === "admin") {
           const response = await userService.getAllUsers();
           setUsers(response.data);
         }
@@ -33,15 +32,12 @@ export default function AddLetterPage() {
     };
 
     fetchUsers();
-  }, [user?.id]);
+  }, [user?.role]);
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      const token =
-        typeof window !== "undefined"
-          ? localStorage.getItem("token") || ""
-          : "";
-      const response = await apiClient.upload("/surat", formData, token);
+      const response = await apiClient.upload("/api/surat", formData);
+      console.log(response);
       router.push(`/dashboard/letters/${response.data.nomor_registrasi}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add letter");

@@ -10,40 +10,26 @@ import LetterStatusBadge from "@/components/dashboard/LetterStatusBadge";
 import { formatDate } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
-import { dummyLetters } from "@/lib/dummy";
 
 export default function LetterDetailPage() {
   const { id } = useParams();
   const [letter, setLetter] = useState<Letter | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
-
-  // useEffect(() => {
-  //   const fetchLetter = async () => {
-  //     try {
-  //       const { data } = await apiClient.get(`/surat/${id}`, token);
-  //       setLetter(data);
-  //     } catch (err) {
-  //       setError(err instanceof Error ? err.message : "Failed to fetch letter");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchLetter();
-  // }, [id, token]);
 
   useEffect(() => {
-    const regId = Number(id);
-    const found = dummyLetters.find((l) => l.nomor_registrasi === regId);
-    if (found) {
-      setLetter(found);
-    } else {
-      setError("Surat tidak ditemukan");
-    }
-    setLoading(false);
+    const fetchLetter = async () => {
+      try {
+        const { data } = await apiClient.get(`/api/surat/${id}`);
+        setLetter(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch letter");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLetter();
   }, [id]);
 
   if (loading) {
@@ -96,7 +82,7 @@ export default function LetterDetailPage() {
                 <p className="mt-1 text-gray-900">{letter.tujuan}</p>
                 {letter.penerima && (
                   <p className="mt-1 text-sm text-gray-600">
-                    {letter.penerima.nama} ({letter.penerima.email})
+                    {letter.penerima.nama_instansi} ({letter.penerima.email_instansi})
                   </p>
                 )}
               </div>

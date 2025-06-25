@@ -79,7 +79,7 @@ export default function LettersPage() {
               <LetterCard
                 letter={letter}
                 onStatusChange={updateLetterStatus}
-                isAdmin={user?.id === 0}
+                isAdmin={user?.role === "admin"}
               />
             </AnimatedDiv>
           ))}

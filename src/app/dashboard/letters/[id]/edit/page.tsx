@@ -1,100 +1,86 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import LetterForm from "@/components/dashboard/LetterForm";
-import AnimatedDiv from "@/components/ui/AnimatedDiv";
-import useReceivers from "@/hooks/useReceivers";
-import useAuth from "@/hooks/useAuth";
+import { useEffect, useState } from "react";
 import { apiClient } from "@/app/api/client";
-import { Letter } from "@/types";
-import { dummyLetters } from "@/lib/dummy";
+import LetterForm from "@/components/dashboard/LetterForm";
+import { User } from "@/types";
+import { formatToDDMMYYYY } from "@/utils/dateFormat";
 
-export default function EditLetterPage() {
+export default function LetterEditPage() {
   const { id } = useParams();
   const router = useRouter();
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
-  const { receivers, loading: receiversLoading } = useReceivers(token);
-  const { user } = useAuth();
-
-  const [letterData, setLetterData] = useState<Letter | null>(null);
+  const [letter, setLetter] = useState<any>(null);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  //   useEffect(() => {
-  //     const fetchLetter = async () => {
-  //       try {
-  //         const { data } = await apiClient.get(`/surat/${id}`, token);
-  //         setLetterData(data);
-  //       } catch (err) {
-  //         setError(err instanceof Error ? err.message : "Failed to fetch letter");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchLetter();
-  //   }, [id, token]);
-
   useEffect(() => {
-    const regId = Number(id);
+    const fetchData = async () => {
+      try {
+        // Fetch letter data
+        const { data: letterData } = await apiClient.get(`/api/surat/${id}`);
+        setLetter(letterData);
 
-    // Ganti sementara API call dengan dummy lookup
-    const found = dummyLetters.find((l) => l.nomor_registrasi === regId);
-    if (found) {
-      setLetterData(found);
-    } else {
-      setError("Surat tidak ditemukan (dummy)");
-    }
-    setLoading(false);
+        // Fetch users list
+        const { data: usersData } = await apiClient.get("/api/users");
+        setUsers(usersData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [id]);
+
   const handleSubmit = async (formData: FormData) => {
     try {
-      const response = await apiClient.upload(
-        `/surat/${id}`,
-        formData,
-        token,
-        "PUT"
-      );
-      router.push(`/dashboard/letters/${response.data.nomor_registrasi}`);
+      setLoading(true);
+      await apiClient.put(`/api/surat/${id}`, formData);
+      router.push("/dashboard/letters");
+      router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update letter");
+      throw err instanceof Error ? err : new Error("Failed to update letter");
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-red-500 p-4">{error}</div>;
+  }
+
+  if (!letter) {
+    return <div className="text-center py-12">Letter not found</div>;
+  }
+
+  // Format tanggal untuk form
+  const initialFormData = {
+    ...letter,
+    tanggal_surat: formatToDDMMYYYY(letter.tanggal_surat),
+    tanggal_masuk: formatToDDMMYYYY(letter.tanggal_masuk),
+    user_id: letter.penerima?.user_id || letter.user_id,
+  };
+
   return (
-    <div className="max-w-3xl mx-auto">
-      <AnimatedDiv>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-md p-6"
-        >
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit Surat </h1>
-
-          {error && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="bg-red-100 text-red-700 p-3 rounded-md mb-4"
-            >
-              {error}
-            </motion.div>
-          )}
-
-          {!loading && letterData && (
-            <LetterForm
-              onSubmit={handleSubmit}
-              receivers={receivers}
-              loading={receiversLoading}
-              defaultPengirim={user?.name || ""}
-              initialData={letterData}
-            />
-          )}
-        </motion.div>
-      </AnimatedDiv>
+    <div className="ml-64 p-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit Surat</h1>
+      <LetterForm
+        onSubmit={handleSubmit}
+        users={users}
+        loading={loading}
+        initialData={initialFormData}
+      />
     </div>
   );
 }

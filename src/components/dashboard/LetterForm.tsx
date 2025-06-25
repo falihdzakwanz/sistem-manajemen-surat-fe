@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { User } from "@/types";
+import { convertDDMMYYYYToYYYYMMDD, formatToDDMMYYYY } from "@/utils/dateFormat";
 
 interface LetterFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
@@ -23,11 +24,20 @@ export default function LetterForm({
   const router = useRouter();
   const [error, setError] = useState("");
 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
     const formData = new FormData(e.currentTarget);
+
+    // Konversi tanggal sebelum dikirim
+    const rawTanggalSurat = formData.get("tanggal_surat") as string;
+    const rawTanggalMasuk = formData.get("tanggal_masuk") as string;
+
+    // Format ke dd-mm-yyyy
+    formData.set("tanggal_surat", formatToDDMMYYYY(rawTanggalSurat));
+    formData.set("tanggal_masuk", formatToDDMMYYYY(rawTanggalMasuk));
 
     try {
       await onSubmit(formData);
@@ -70,7 +80,11 @@ export default function LetterForm({
           label="Tanggal Surat"
           name="tanggal_surat"
           type="date"
-          defaultValue={initialData?.tanggal_surat?.split("T")[0]} // Format date for input
+          defaultValue={
+            initialData?.tanggal_surat?.includes("-")
+              ? convertDDMMYYYYToYYYYMMDD(initialData.tanggal_surat)
+              : initialData?.tanggal_surat?.split("T")[0]
+          }
           required
           className="text-black"
         />
@@ -79,7 +93,11 @@ export default function LetterForm({
           label="Tanggal Masuk"
           name="tanggal_masuk"
           type="date"
-          defaultValue={initialData?.tanggal_masuk?.split("T")[0]} // Format date for input
+          defaultValue={
+            initialData?.tanggal_masuk?.includes("-")
+              ? convertDDMMYYYYToYYYYMMDD(initialData.tanggal_masuk)
+              : initialData?.tanggal_masuk?.split("T")[0]
+          }
           required
           className="text-black"
         />
