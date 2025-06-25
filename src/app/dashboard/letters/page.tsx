@@ -74,15 +74,22 @@ export default function LettersPage() {
           animate={{ opacity: 1 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-          {letters.map((letter, index) => (
-            <AnimatedDiv key={letter.nomor_registrasi} delay={index * 0.05}>
-              <LetterCard
-                letter={letter}
-                onStatusChange={updateLetterStatus}
-                isAdmin={user?.role === "admin"}
-              />
-            </AnimatedDiv>
-          ))}
+          {letters
+            .filter((letter) => {
+              // Jika admin, tampilkan semua
+              if (user?.role === "admin") return true;
+              // Jika bukan admin, hanya tampilkan surat milik user
+              return letter.penerima_id === user?.id;
+            })
+            .map((letter, index) => (
+              <AnimatedDiv key={letter.nomor_registrasi} delay={index * 0.05}>
+                <LetterCard
+                  letter={letter}
+                  onStatusChange={updateLetterStatus}
+                  isAdmin={user?.role === "admin"}
+                />
+              </AnimatedDiv>
+            ))}
         </motion.div>
       )}
     </div>

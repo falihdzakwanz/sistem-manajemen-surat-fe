@@ -11,7 +11,7 @@ import { FiEye, FiEdit2, FiFileText, FiInbox } from "react-icons/fi";
 interface LetterCardProps {
   letter: Letter;
   onStatusChange?: (id: number, status: "diterima" | "pending") => void;
-  isAdmin: boolean;
+  isAdmin?: boolean;
 }
 
 export default function LetterCard({

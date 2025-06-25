@@ -1,4 +1,5 @@
 import { apiClient } from "@/app/api/client";
+import { User } from "@/types";
 
 export const userService = {
   async register(data: {
@@ -17,6 +18,25 @@ export const userService = {
   // For admin only
   async getAllUsers() {
     return apiClient.get("/api/users");
+  },
+
+  // ✅ Tambahan: Get user by ID (for admin)
+  async getById(id: number): Promise<User> {
+    const response = await apiClient.get(`/api/users/${id}`);
+    return response.data;
+  },
+
+  // ✅ Tambahan: Update user by ID (for admin)
+  async update(
+    id: number,
+    data: {
+      nama_instansi?: string;
+      email_instansi?: string;
+      password?: string;
+      role?: "admin" | "user";
+    }
+  ) {
+    return apiClient.put(`/api/users/${id}`, data);
   },
 
   // For admin only

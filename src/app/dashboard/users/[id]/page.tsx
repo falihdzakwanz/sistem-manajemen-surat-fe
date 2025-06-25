@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiClient } from "@/app/api/client";
-import { Receiver } from "@/types";
+import { User } from "@/types";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
 import { formatDate } from "@/lib/utils";
@@ -13,7 +13,7 @@ import Link from "next/link";
 export default function ReceiverDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [receiver, setReceiver] = useState<Receiver | null>(null);
+  const [user, setReceiver] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const token =
@@ -25,9 +25,7 @@ export default function ReceiverDetailPage() {
         const { data } = await apiClient.get(`/penerima/${id}`, token);
         setReceiver(data);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch receiver"
-        );
+        setError(err instanceof Error ? err.message : "Failed to fetch user");
       } finally {
         setLoading(false);
       }
@@ -37,14 +35,12 @@ export default function ReceiverDetailPage() {
   }, [id, token]);
 
   const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this receiver?")) {
+    if (confirm("Are you sure you want to delete this user?")) {
       try {
         await apiClient.delete(`/penerima/${id}`, token);
         router.push("/dashboard/receivers");
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to delete receiver"
-        );
+        setError(err instanceof Error ? err.message : "Failed to delete user");
       }
     }
   };
@@ -61,14 +57,14 @@ export default function ReceiverDetailPage() {
     return <div className="text-red-500 p-4">{error}</div>;
   }
 
-  if (!receiver) {
-    return <div className="text-center py-12">Receiver not found</div>;
+  if (!user) {
+    return <div className="text-center py-12">User not found</div>;
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Receiver Details</h1>
+        <h1 className="text-2xl font-bold text-gray-800">User Details</h1>
         <Link href="/dashboard/receivers">
           <Button variant="outline">Back to Receivers</Button>
         </Link>
@@ -83,30 +79,30 @@ export default function ReceiverDetailPage() {
           <div className="space-y-4">
             <div>
               <h3 className="text-sm font-medium text-gray-500">Name</h3>
-              <p className="mt-1 text-gray-900">{receiver.nama}</p>
+              <p className="mt-1 text-gray-900">{user.nama_instansi}</p>
             </div>
 
             <div>
               <h3 className="text-sm font-medium text-gray-500">Email</h3>
-              <p className="mt-1 text-gray-900">{receiver.email}</p>
+              <p className="mt-1 text-gray-900">{user.email_instansi}</p>
             </div>
 
-            {receiver.total_surat && (
+            {user.total_surat && (
               <div>
                 <h3 className="text-sm font-medium text-gray-500">
                   Total Letters
                 </h3>
-                <p className="mt-1 text-gray-900">{receiver.total_surat}</p>
+                <p className="mt-1 text-gray-900">{user.total_surat}</p>
               </div>
             )}
 
-            {receiver.created_at && (
+            {user.created_at && (
               <div>
                 <h3 className="text-sm font-medium text-gray-500">
                   Created At
                 </h3>
                 <p className="mt-1 text-gray-900">
-                  {formatDate(receiver.created_at)}
+                  {formatDate(user.created_at)}
                 </p>
               </div>
             )}

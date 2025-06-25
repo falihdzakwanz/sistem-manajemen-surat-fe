@@ -6,7 +6,10 @@ import { motion } from "framer-motion";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { User } from "@/types";
-import { convertDDMMYYYYToYYYYMMDD, formatToDDMMYYYY } from "@/utils/dateFormat";
+import {
+  convertDDMMYYYYToYYYYMMDD,
+  formatToDDMMYYYY,
+} from "@/utils/dateFormat";
 
 interface LetterFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
@@ -23,7 +26,6 @@ export default function LetterForm({
 }: LetterFormProps) {
   const router = useRouter();
   const [error, setError] = useState("");
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -116,11 +118,13 @@ export default function LetterForm({
             disabled={loading}
           >
             <option value="">Pilih Penerima</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.nama_instansi} ({user.email_instansi})
-              </option>
-            ))}
+            {users
+              .filter((user) => user.role !== "admin")
+              .map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.nama_instansi} ({user.email_instansi})
+                </option>
+              ))}
           </select>
         </div>
 
