@@ -31,6 +31,7 @@ export default function AddOrEditUserPage() {
     const fetchUser = async () => {
       try {
         const data = await userService.getById(numericId);
+
         setUserData(data);
       } catch (err) {
         console.error("Failed to fetch user:", err);
