@@ -126,7 +126,7 @@ export default function LetterDetailPage() {
           <div className="mt-6">
             <h3 className="text-sm font-medium text-gray-500">File</h3>
             <a
-              href={letter.file_url}
+              href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/${letter.file_url}`}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 inline-flex items-center text-blue-600 hover:underline"

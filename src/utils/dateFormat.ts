@@ -15,10 +15,9 @@ export const parseDDMMYYYYToDate = (ddmmyyyy: string): string => {
   if (!ddmmyyyy) return "";
 
   const [day, month, year] = ddmmyyyy.split("-");
-  return `${year}-${month}-${day}`; // Format yang bisa dipahami Date
+  return `${year}-${month}-${day}`;
 };
 
-// utils/dateUtils.ts
 export function convertDDMMYYYYToYYYYMMDD(dateString: string): string {
   if (!dateString) return "";
   
@@ -33,4 +32,23 @@ export function convertDDMMYYYYToYYYYMMDD(dateString: string): string {
   }
   
   return `${year}-${month}-${day}`;
+}
+
+export function formatToMMDDYYYY(dateString: string): string {
+  const parts = dateString.split("-");
+
+  if (
+    parts.length !== 3 ||
+    parts[0].length !== 2 ||
+    parts[1].length !== 2 ||
+    parts[2].length !== 4
+  ) {
+    throw new Error("Format tanggal tidak valid. Harus dd-mm-yyyy");
+  }
+
+  const day = parts[0];
+  const month = parts[1];
+  const year = parts[2];
+
+  return `${month}-${day}-${year}`;
 }

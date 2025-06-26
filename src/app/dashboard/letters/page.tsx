@@ -57,7 +57,7 @@ export default function LettersPage() {
     <div className="ml-64 space-y-6 p-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Surat Masuk</h1>
-        {user?.id === 0 && (
+        {user?.role === "admin" && (
           <Link href="/dashboard/letters/add">
             <Button>+ Tambah Surat</Button>
           </Link>
@@ -76,9 +76,7 @@ export default function LettersPage() {
         >
           {letters
             .filter((letter) => {
-              // Jika admin, tampilkan semua
               if (user?.role === "admin") return true;
-              // Jika bukan admin, hanya tampilkan surat milik user
               return letter.penerima_id === user?.id;
             })
             .map((letter, index) => (

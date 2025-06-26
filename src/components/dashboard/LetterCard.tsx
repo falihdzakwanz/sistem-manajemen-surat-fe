@@ -63,13 +63,14 @@ export default function LetterCard({
           </Button>
 
           {letter.file_url && (
-            <Button
-              size="sm"
+            <a
               className="flex items-center gap-1 bg-slate-600 hover:bg-slate-700 focus:ring-slate-500"
-              onClick={() => window.open(letter.file_url, "_blank")}
+              href={`${
+                process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+              }/${letter.file_url}`}
             >
               <FiFileText /> Lihat File
-            </Button>
+            </a>
           )}
 
           {isAdmin && (

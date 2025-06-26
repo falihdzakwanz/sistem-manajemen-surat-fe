@@ -15,8 +15,8 @@ export interface Letter {
   pengirim: string;
   tujuan: string;
   nomor_surat: string;
-  tanggal_masuk: string | Date;
-  tanggal_surat: string | Date;
+  tanggal_masuk: string;
+  tanggal_surat: string;
   perihal: string;
   file_url: string;
   status: "pending" | "diterima";

@@ -7,7 +7,6 @@ import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { User } from "@/types";
 import {
-  convertDDMMYYYYToYYYYMMDD,
   formatToDDMMYYYY,
 } from "@/utils/dateFormat";
 
@@ -82,11 +81,7 @@ export default function LetterForm({
           label="Tanggal Surat"
           name="tanggal_surat"
           type="date"
-          defaultValue={
-            initialData?.tanggal_surat?.includes("-")
-              ? convertDDMMYYYYToYYYYMMDD(initialData.tanggal_surat)
-              : initialData?.tanggal_surat?.split("T")[0]
-          }
+          defaultValue={initialData?.tanggal_surat}
           required
           className="text-black"
         />
@@ -95,11 +90,7 @@ export default function LetterForm({
           label="Tanggal Masuk"
           name="tanggal_masuk"
           type="date"
-          defaultValue={
-            initialData?.tanggal_masuk?.includes("-")
-              ? convertDDMMYYYYToYYYYMMDD(initialData.tanggal_masuk)
-              : initialData?.tanggal_masuk?.split("T")[0]
-          }
+          defaultValue={initialData?.tanggal_masuk}
           required
           className="text-black"
         />

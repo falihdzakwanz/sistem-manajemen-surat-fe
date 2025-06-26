@@ -4,13 +4,13 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiClient } from "@/app/api/client";
 import LetterForm from "@/components/dashboard/LetterForm";
-import { User } from "@/types";
-import { formatToDDMMYYYY } from "@/utils/dateFormat";
+import { Letter, User } from "@/types";
+import { parseDDMMYYYYToDate } from "@/utils/dateFormat";
 
 export default function LetterEditPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [letter, setLetter] = useState<any>(null);
+  const [letter, setLetter] = useState<Letter | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -67,9 +67,8 @@ export default function LetterEditPage() {
   // Format tanggal untuk form
   const initialFormData = {
     ...letter,
-    tanggal_surat: formatToDDMMYYYY(letter.tanggal_surat),
-    tanggal_masuk: formatToDDMMYYYY(letter.tanggal_masuk),
-    user_id: letter.penerima?.user_id || letter.user_id,
+    tanggal_surat: parseDDMMYYYYToDate(letter.tanggal_surat),
+    tanggal_masuk: parseDDMMYYYYToDate(letter.tanggal_masuk),
   };
 
   return (
