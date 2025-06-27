@@ -5,32 +5,34 @@ import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { motion } from "framer-motion";
 
-interface ReceiverFormProps {
+interface UserFormProps {
   initialData?: {
     id?: number;
     nama_instansi: string;
     email_instansi: string;
     role: "user";
-    password: string;
+    password?: string;
   };
   onSubmit: (data: {
     nama_instansi: string;
     email_instansi: string;
-    password: string;
+    password?: string;
     role: "user";
   }) => Promise<void>;
   loading?: boolean;
 }
 
-export default function ReceiverForm({
+export default function UserForm({
   initialData,
   onSubmit,
   loading = false,
-}: ReceiverFormProps) {
+}: UserFormProps) {
+  const isUpdateMode = !!initialData?.id;
+
   const [formData, setFormData] = useState({
     nama_instansi: initialData?.nama_instansi || "",
     email_instansi: initialData?.email_instansi || "",
-    password: initialData?.password || "",
+    password: "",
     role: "user" as const,
   });
 
@@ -40,22 +42,32 @@ export default function ReceiverForm({
     e.preventDefault();
     setError("");
 
-    if (
-      !formData.nama_instansi ||
-      !formData.email_instansi ||
-      !formData.password
-    ) {
-      setError("Semua field harus diisi");
+    // Basic validation
+    if (!formData.nama_instansi || !formData.email_instansi) {
+      setError("Nama instansi dan email harus diisi");
       return;
     }
 
-    if (formData.password.length < 6) {
+    if (!isUpdateMode && !formData.password) {
+      setError("Password harus diisi untuk user baru");
+      return;
+    }
+
+    if (formData.password && formData.password.length < 6) {
       setError("Password harus minimal 6 karakter");
       return;
     }
 
+    // Prepare submit data - don't include password if empty in update mode
+    const submitData = {
+      nama_instansi: formData.nama_instansi,
+      email_instansi: formData.email_instansi,
+      role: formData.role,
+      ...(formData.password ? { password: formData.password } : {}),
+    };
+
     try {
-      await onSubmit(formData);
+      await onSubmit(submitData);
     } catch (err) {
       setError(
         err instanceof Error
@@ -95,16 +107,23 @@ export default function ReceiverForm({
           setFormData({ ...formData, email_instansi: e.target.value })
         }
         required
-        className="text-black"
+        disabled={isUpdateMode}
+        className={`text-black ${
+          isUpdateMode ? "opacity-70 bg-gray-100 cursor-not-allowed" : ""
+        }`}
       />
 
       <Input
-        label="Password"
+        label={
+          isUpdateMode
+            ? "Password (Biarkan kosong jika tidak diubah)"
+            : "Password"
+        }
         type="password"
         value={formData.password}
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-        required
-        minLength={6}
+        required={!isUpdateMode}
+        minLength={isUpdateMode ? undefined : 6}
         className="text-black"
       />
 
@@ -138,10 +157,10 @@ export default function ReceiverForm({
             </svg>
             Menyimpan...
           </span>
-        ) : initialData?.id ? (
-          "Update Penerima"
+        ) : isUpdateMode ? (
+          "Update User"
         ) : (
-          "Tambah Penerima"
+          "Tambah User"
         )}
       </Button>
     </form>

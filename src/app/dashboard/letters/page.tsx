@@ -1,49 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import useAuth from "@/hooks/useAuth";
 import LetterCard from "@/components/dashboard/LetterCard";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
-import { letterService } from "@/services/letterService";
-import { Letter } from "@/types";
+import useLetters from "@/hooks/useLetters";
 
 export default function LettersPage() {
-  const { user } = useAuth();
-  const [letters, setLetters] = useState<Letter[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchLetters = async () => {
-      try {
-        setLoading(true);
-        const response = await letterService.getLetters(user?.role === "user");
-        setLetters(response.data);
-      } catch (error) {
-        console.error("Failed to fetch letters:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLetters();
-  }, [user?.role]);
-
-  const updateLetterStatus = async (
-    id: number,
-    status: "diterima" | "pending"
-  ) => {
-    try {
-      await letterService.updateLetterStatus(id, status);
-      setLetters((prev) =>
-        prev.map((l) => (l.nomor_registrasi === id ? { ...l, status } : l))
-      );
-    } catch (error) {
-      console.error("Failed to update letter status:", error);
-    }
-  };
+  const {
+    letters,
+    loading,
+    error,
+    updateLetterStatus,
+    isAdmin,
+    currentUserId,
+  } = useLetters();
 
   if (loading) {
     return (
@@ -53,11 +25,19 @@ export default function LettersPage() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="ml-64 flex justify-center items-center h-screen">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="ml-64 space-y-6 p-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Surat Masuk</h1>
-        {user?.role === "admin" && (
+        {isAdmin && (
           <Link href="/dashboard/letters/add">
             <Button>+ Tambah Surat</Button>
           </Link>
@@ -76,15 +56,15 @@ export default function LettersPage() {
         >
           {letters
             .filter((letter) => {
-              if (user?.role === "admin") return true;
-              return letter.penerima_id === user?.id;
+              if (isAdmin) return true;
+              return letter.penerima_id === currentUserId;
             })
             .map((letter, index) => (
               <AnimatedDiv key={letter.nomor_registrasi} delay={index * 0.05}>
                 <LetterCard
                   letter={letter}
                   onStatusChange={updateLetterStatus}
-                  isAdmin={user?.role === "admin"}
+                  isAdmin={isAdmin}
                 />
               </AnimatedDiv>
             ))}

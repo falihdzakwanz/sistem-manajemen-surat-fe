@@ -1,48 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import LetterForm from "@/components/dashboard/LetterForm";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
-import useAuth from "@/hooks/useAuth";
 import { apiClient } from "@/app/api/client";
-import { userService } from "@/services/userService";
+import useUsers from "@/hooks/useUsers";
 
 export default function AddLetterPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        if (user?.role === "admin") {
-          const response = await userService.getAllUsers();
-          setUsers(response.data);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch users");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, [user?.role]);
+  const { users, loading: usersLoading, error: usersError } = useUsers();
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
     try {
+      setIsSubmitting(true);
+      setSubmitError("");
+
       const response = await apiClient.upload("/api/surat", formData);
-      console.log(response);
       router.push(`/dashboard/letters/${response.data.nomor_registrasi}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add letter");
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to add letter";
+      setSubmitError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const error = usersError || submitError;
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -66,7 +54,11 @@ export default function AddLetterPage() {
             </motion.div>
           )}
 
-          <LetterForm onSubmit={handleSubmit} users={users} loading={loading} />
+          <LetterForm
+            onSubmit={handleSubmit}
+            users={users}
+            loading={usersLoading || isSubmitting}
+          />
         </motion.div>
       </AnimatedDiv>
     </div>
