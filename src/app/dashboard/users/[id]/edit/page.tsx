@@ -1,67 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import ReceiverForm from "@/components/dashboard/UserForm";
+import UserForm from "@/components/dashboard/UserForm";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
-import { userService } from "@/services/userService";
-import { User } from "@/types";
+import useUserOperations from "@/hooks/useUserOperations";
 
-export default function AddOrEditUserPage() {
-  const params = useParams();
-  const router = useRouter();
-
-  const rawId = params?.id;
-  const numericId =
-    typeof rawId === "string"
-      ? parseInt(rawId)
-      : Array.isArray(rawId)
-      ? parseInt(rawId[0])
-      : NaN;
-
-  const isEdit = !isNaN(numericId);
-  const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(isEdit);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!isEdit) return;
-
-    const fetchUser = async () => {
-      try {
-        const data = await userService.getById(numericId);
-
-        setUserData(data);
-      } catch (err) {
-        console.error("Failed to fetch user:", err);
-        setError("Gagal mengambil data pengguna.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [numericId, isEdit]);
-
-  const handleSubmit = async (data: {
-    nama_instansi: string;
-    email_instansi: string;
-    password: string;
-    role: "user";
-  }) => {
-    try {
-      if (isEdit) {
-        await userService.update(numericId, data);
-      } else {
-        await userService.register(data);
-      }
-      router.push("/dashboard/users");
-    } catch (error) {
-      console.error("Failed to submit user:", error);
-      throw error;
-    }
-  };
+export default function EditUserPage() {
+  const { isEdit, userData, loading, error, handleSubmit } = useUserOperations();
 
   const initialFormData = userData
     ? {
@@ -69,7 +14,7 @@ export default function AddOrEditUserPage() {
         nama_instansi: userData.nama_instansi,
         email_instansi: userData.email_instansi,
         role: "user" as const,
-        password: "", // kosongkan untuk keamanan
+        password: "",
       }
     : undefined;
 
@@ -92,10 +37,7 @@ export default function AddOrEditUserPage() {
           )}
 
           {!loading && (
-            <ReceiverForm
-              onSubmit={handleSubmit}
-              initialData={initialFormData}
-            />
+            <UserForm onSubmit={handleSubmit} initialData={initialFormData} />
           )}
         </motion.div>
       </AnimatedDiv>
