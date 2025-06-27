@@ -25,3 +25,10 @@ export interface Letter {
   created_at?: string | Date;
   updated_at?: string | Date;
 }
+
+export const UserRole = {
+  USER: "user",
+  ADMIN: "admin",
+} as const;
+
+export type UserRole = typeof UserRole[keyof typeof UserRole];
