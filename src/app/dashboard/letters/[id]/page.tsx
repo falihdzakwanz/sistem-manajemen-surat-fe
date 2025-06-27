@@ -10,6 +10,7 @@ import LetterStatusBadge from "@/components/dashboard/LetterStatusBadge";
 import { formatDate } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import { FiEdit2, FiFileText, FiArrowLeft } from "react-icons/fi";
 
 export default function LetterDetailPage() {
   const { id } = useParams();
@@ -53,7 +54,10 @@ export default function LetterDetailPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Letter Details</h1>
         <Link href="/dashboard/letters">
-          <Button variant="outline">Back to Letters</Button>
+          <Button className="flex items-center gap-x-2">
+            <FiArrowLeft className="text-lg" />
+            Kembali
+          </Button>
         </Link>
       </div>
 
@@ -82,7 +86,8 @@ export default function LetterDetailPage() {
                 <p className="mt-1 text-gray-900">{letter.tujuan}</p>
                 {letter.penerima && (
                   <p className="mt-1 text-sm text-gray-600">
-                    {letter.penerima.nama_instansi} ({letter.penerima.email_instansi})
+                    {letter.penerima.nama_instansi} (
+                    {letter.penerima.email_instansi})
                   </p>
                 )}
               </div>
@@ -123,22 +128,22 @@ export default function LetterDetailPage() {
             </div>
           </div>
 
-          <div className="mt-6">
-            <h3 className="text-sm font-medium text-gray-500">File</h3>
-            <a
-              href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/${letter.file_url}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center text-blue-600 hover:underline"
-            >
-              View Document
-            </a>
-          </div>
-
           <div className="mt-6 flex space-x-3">
             {}
+            {letter.file_url && (
+              <a
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-600 hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 text-white text-sm font-medium rounded-md transition"
+                href={`${
+                  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+                }/${letter.file_url}`}
+              >
+                <FiFileText /> Lihat File
+              </a>
+            )}
             <Link href={`/dashboard/letters/${id}/edit`}>
-              <Button variant="outline">Edit</Button>
+              <Button className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500">
+                <FiEdit2 /> Edit
+              </Button>
             </Link>
           </div>
         </motion.div>
