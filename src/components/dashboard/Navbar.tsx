@@ -20,7 +20,7 @@ export default function Navbar({ user }: NavbarProps) {
     >
       <div className="flex items-center justify-between h-16 px-6">
         <div className="flex items-center ">
-          <h1 className="text-xl font-bold text-gray-800">Manajemen Surat</h1>
+          <h1 className="text-xl font-bold text-gray-800">SIMAS</h1>
         </div>
 
         <div className="flex items-center space-x-4">
