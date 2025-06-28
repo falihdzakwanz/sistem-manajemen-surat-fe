@@ -5,16 +5,14 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import { User } from "@/types";
-import {
-  formatToDDMMYYYY,
-} from "@/utils/dateFormat";
+import { Letter, User } from "@/types";
+import { formatToDDMMYYYY } from "@/utils/dateFormat";
 
 interface LetterFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
   users: User[];
   loading: boolean;
-  initialData?: any;
+  initialData?: Letter;
 }
 
 export default function LetterForm({
@@ -32,18 +30,26 @@ export default function LetterForm({
 
     const formData = new FormData(e.currentTarget);
 
-    // Konversi tanggal sebelum dikirim
+    // Convert dates only if they're not empty
     const rawTanggalSurat = formData.get("tanggal_surat") as string;
     const rawTanggalMasuk = formData.get("tanggal_masuk") as string;
 
-    // Format ke dd-mm-yyyy
-    formData.set("tanggal_surat", formatToDDMMYYYY(rawTanggalSurat));
-    formData.set("tanggal_masuk", formatToDDMMYYYY(rawTanggalMasuk));
+    if (rawTanggalSurat) {
+      formData.set("tanggal_surat", formatToDDMMYYYY(rawTanggalSurat));
+    }
+    if (rawTanggalMasuk) {
+      formData.set("tanggal_masuk", formatToDDMMYYYY(rawTanggalMasuk));
+    }
+
+    // Add current file URL if no new file is selected
+    if (initialData?.file_url && !formData.get("file")) {
+      formData.set("file_url", initialData.file_url);
+    }
 
     try {
       await onSubmit(formData);
-      router.push("/dashboard/letters");
     } catch (err) {
+      console.error("Form submission error:", err);
       setError(err instanceof Error ? err.message : "Failed to save letter");
     }
   };
@@ -94,38 +100,28 @@ export default function LetterForm({
           required
           className="text-black"
         />
+      </div>
 
-        <div className="space-y-1 text-black">
-          <label className="block text-sm font-medium text-gray-700">
-            Penerima
-          </label>
-          <select
-            name="user_id" // Changed to match API spec
-            defaultValue={
-              initialData?.penerima?.user_id || initialData?.user_id
-            }
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            required
-            disabled={loading}
-          >
-            <option value="">Pilih Penerima</option>
-            {users
-              .filter((user) => user.role !== "admin")
-              .map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.nama_instansi} ({user.email_instansi})
-                </option>
-              ))}
-          </select>
-        </div>
-
-        <Input
-          label="Tujuan"
-          name="tujuan"
-          defaultValue={initialData?.tujuan}
+      <div className="space-y-1 text-black">
+        <label className="block text-sm font-medium text-gray-700">
+          Penerima
+        </label>
+        <select
+          name="user_id"
+          defaultValue={initialData?.user?.id || initialData?.user_id}
+          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           required
-          className="text-black"
-        />
+          disabled={loading}
+        >
+          <option value="">Pilih Penerima</option>
+          {users
+            .filter((user) => user.role !== "admin")
+            .map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.nama_instansi} ({user.email_instansi})
+              </option>
+            ))}
+        </select>
       </div>
 
       <Input
@@ -145,7 +141,7 @@ export default function LetterForm({
           name="file"
           accept=".pdf,.doc,.docx"
           className="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          required={!initialData?.file_url} // Only required for new letters
+          required={!initialData?.file_url}
           disabled={loading}
         />
         {initialData?.file_url && (

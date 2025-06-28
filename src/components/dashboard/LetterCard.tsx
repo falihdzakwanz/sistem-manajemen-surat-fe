@@ -41,7 +41,7 @@ export default function LetterCard({
         </div>
 
         <div className="mt-4 text-sm text-gray-700">
-          <p>Tujuan: {letter.tujuan}</p>
+          <p>Tujuan: {letter.user?.nama_instansi}</p>
           <p className="mt-1">
             Tanggal Surat: {formatDate(letter.tanggal_surat)}
           </p>

@@ -13,15 +13,14 @@ export interface Letter {
   id: number;
   nomor_registrasi: number;
   pengirim: string;
-  tujuan: string;
   nomor_surat: string;
   tanggal_masuk: string;
   tanggal_surat: string;
   perihal: string;
   file_url: string;
   status: "pending" | "diterima";
-  penerima_id: number;
-  penerima?: User;
+  user_id: number;
+  user?: User;
   created_at?: string | Date;
   updated_at?: string | Date;
 }

@@ -13,10 +13,12 @@ import LetterDetailSection from "@/components/dashboard/LetterDetailSection";
 
 export default function LetterDetailPage() {
   const { nomor_registrasi } = useParams();
-  const { letter, loading, error } = useLetterDetail(nomor_registrasi as string);
+  const { letter, loading, error } = useLetterDetail(
+    nomor_registrasi as string
+  );
 
   if (loading) {
-    return <LoadingSpinner />
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -24,15 +26,15 @@ export default function LetterDetailPage() {
   }
 
   if (!letter) {
-    return <div className="text-center py-12">Letter not found</div>;
+    return <div className="text-center py-12">Surat tidak ditemukan</div>;
   }
 
   return (
     <div className="ml-64 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Letter Details</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Detail Surat</h1>
         <Link href="/dashboard/letters">
-          <Button variant="outline">Back to Letters</Button>
+          <Button variant="outline">Kembali ke Daftar Surat</Button>
         </Link>
       </div>
 
@@ -50,29 +52,26 @@ export default function LetterDetailPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <LetterDetailSection title="Sender" value={letter.pengirim} />
+            <LetterDetailSection title="Pengirim" value={letter.pengirim} />
             <LetterDetailSection
-              title="Recipient"
-              value={letter.tujuan}
-              additionalValue={
-                letter.penerima &&
-                `${letter.penerima.nama_instansi} (${letter.penerima.email_instansi})`
-              }
+              title="Penerima"
+              value={letter.user!.nama_instansi}
+              additionalValue={letter.user!.email_instansi}
             />
             <LetterDetailSection
-              title="Letter Number"
+              title="Nomor Surat"
               value={letter.nomor_surat}
             />
             <LetterDetailSection
-              title="Letter Date"
+              title="Tanggal Surat"
               value={formatDate(letter.tanggal_surat)}
             />
             <LetterDetailSection
-              title="Received Date"
+              title="Tanggal Diterima"
               value={formatDate(letter.tanggal_masuk)}
             />
             <LetterDetailSection
-              title="Registration Number"
+              title="Nomor Registrasi"
               value={letter.nomor_registrasi}
             />
           </div>
@@ -89,7 +88,7 @@ export default function LetterDetailPage() {
 function FileViewerSection({ fileUrl }: { fileUrl: string }) {
   return (
     <div className="mt-6">
-      <h3 className="text-sm font-medium text-gray-500">File</h3>
+      <h3 className="text-sm font-medium text-gray-500">Berkas</h3>
       <a
         href={`${
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
@@ -98,7 +97,7 @@ function FileViewerSection({ fileUrl }: { fileUrl: string }) {
         rel="noopener noreferrer"
         className="mt-2 inline-flex items-center text-blue-600 hover:underline"
       >
-        View Document
+        Lihat Dokumen
       </a>
     </div>
   );

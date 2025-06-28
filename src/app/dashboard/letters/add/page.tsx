@@ -19,8 +19,8 @@ export default function AddLetterPage() {
       setIsSubmitting(true);
       setSubmitError("");
 
-      const response = await apiClient.upload("/api/surat", formData);
-      router.push(`/dashboard/letters/${response.data.nomor_registrasi}`);
+      await apiClient.upload("/api/surat", formData);
+      router.push("/dashboard/letters");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to add letter";

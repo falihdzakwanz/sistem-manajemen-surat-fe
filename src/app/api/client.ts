@@ -3,26 +3,37 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 export const apiClient = {
   async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
-    const headers = {
-      "Content-Type": "application/json",
-      ...(token && { "X-API-TOKEN": token }),
-      ...options.headers,
-    };
+    const headers = new Headers();
 
-    const response = await fetch(url, { ...options, headers });
-    
+    if (!(options.body instanceof FormData)) {
+      headers.append("Content-Type", "application/json");
+    }
+
+    if (token) {
+      headers.append("X-API-TOKEN", token);
+    }
+
+    if (options.headers) {
+      new Headers(options.headers).forEach((value, key) => {
+        headers.append(key, value);
+      });
+    }
+
+    const response = await fetch(url, {
+      ...options,
+      headers,
+    });
+
     if (!response.ok) {
-      // Handle 401 unauthorized
       if (response.status === 401) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        // window.location.href = '/login';
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
-      
+
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.errors || "Request failed");
+      throw new Error(errorData.message || "Request failed");
     }
 
     return response.json();
@@ -42,7 +53,7 @@ export const apiClient = {
   async put(endpoint: string, body: any) {
     return this.request(endpoint, {
       method: "PUT",
-      body: JSON.stringify(body),
+      body: body instanceof FormData ? body : JSON.stringify(body),
     });
   },
 
@@ -58,7 +69,7 @@ export const apiClient = {
   },
 
   async upload(endpoint: string, formData: FormData) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "POST",
       headers: {

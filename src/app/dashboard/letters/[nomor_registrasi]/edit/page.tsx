@@ -27,11 +27,29 @@ export default function LetterEditPage() {
       setSubmitLoading(true);
       setSubmitError(null);
 
-      await apiClient.put(`/api/surat/${nomor_registrasi}`, formData);
+      // Log the form data before sending
+      console.log("FormData before submission:");
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      console.log(formData);
+      const response = await apiClient.put(
+        `/api/surat/${nomor_registrasi}`,
+        formData
+      );
+
+      // Log the full response
+      console.log("API Response:", response);
+
+      if (!response.data) {
+        throw new Error("No data returned from server");
+      }
 
       router.push("/dashboard/letters");
       router.refresh();
     } catch (err) {
+      console.error("Error submitting form:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to update letter";
       setSubmitError(errorMessage);

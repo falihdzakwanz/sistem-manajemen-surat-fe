@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
 import useLetters from "@/hooks/useLetters";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function LettersPage() {
   const {
@@ -18,11 +19,7 @@ export default function LettersPage() {
   } = useLetters();
 
   if (loading) {
-    return (
-      <div className="ml-64 flex justify-center items-center h-screen">
-        <p>Loading letters...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -57,7 +54,7 @@ export default function LettersPage() {
           {letters
             .filter((letter) => {
               if (isAdmin) return true;
-              return letter.penerima_id === currentUserId;
+              return letter.user?.id === currentUserId;
             })
             .map((letter, index) => (
               <AnimatedDiv key={letter.nomor_registrasi} delay={index * 0.05}>
