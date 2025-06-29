@@ -92,7 +92,6 @@ export default function useUserOperations() {
       return false;
     } finally {
       setIsDeleting(false);
-      // setDeleteError("");
     }
   };
 
