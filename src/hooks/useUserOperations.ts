@@ -1,4 +1,3 @@
-// hooks/useUserOperations.ts
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,6 +8,8 @@ import { userService } from "@/services/userService";
 export default function useUserOperations() {
   const params = useParams();
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   const rawId = params?.id;
   const numericId =
@@ -63,11 +64,34 @@ export default function useUserOperations() {
     }
   };
 
+  const deleteUser = async (userId: number, hasLetters: boolean) => {
+    try {
+      setIsDeleting(true);
+      setDeleteError("");
+
+      if (hasLetters) {
+        throw new Error("User memiliki surat, tidak dapat dihapus");
+      }
+
+      await userService.deleteUser(userId);
+      return true;
+    } catch (err) {
+      console.error(err);
+      setDeleteError("User memiliki surat, tidak dapat dihapus");
+      return false;
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return {
     isEdit,
     userData,
     loading,
     error,
     handleSubmit,
+    deleteUser,
+    isDeleting,
+    deleteError,
   };
 }

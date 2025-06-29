@@ -2,23 +2,24 @@
 
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
-import { formatDate } from "@/lib/utils";
 import { User } from "@/types";
-import { FiEdit2 } from "react-icons/fi";
 
-interface ReceiverCardProps {
+interface UserCardProps {
   user: User;
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
   onClick?: () => void;
+  actions?: {
+    icon: React.ReactNode;
+    onClick: () => void;
+    label: string;
+    variant?: "primary" | "danger" | "warning";
+  }[];
 }
 
-export default function ReceiverCard({
+export default function UserCard({
   user,
-  onEdit,
-  onDelete,
   onClick,
-}: ReceiverCardProps) {
+  actions = [],
+}: UserCardProps) {
   return (
     <div
       onClick={onClick}
@@ -43,37 +44,28 @@ export default function ReceiverCard({
               {user.total_surat} surat
             </span>
           </div>
-
-          <div className="mt-4 text-sm text-gray-700">
-            <p>Added: {formatDate(user.created_at || new Date())}</p>
-          </div>
-
-          <div className="mt-4 flex space-x-2">
-            {onEdit && (
-              <Button
-                size="sm"
-                className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit(user.id);
-                }}
-              >
-                <FiEdit2 /> Edit
-              </Button>
-            )}
-            {onDelete && (
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(user.id);
-                }}
-              >
-                Delete
-              </Button>
-            )}
-          </div>
+          {actions.length > 0 && (
+            <div className="mt-4 flex space-x-2">
+              {actions.map((action, index) => (
+                <Button
+                  key={index}
+                  size="sm"
+                  variant={action.variant}
+                  className={`flex items-center gap-1 ${
+                    action.variant === "danger"
+                      ? "bg-red-600 hover:bg-red-700 focus:ring-red-500"
+                      : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    action.onClick();
+                  }}
+                >
+                  {action.icon} {action.label}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

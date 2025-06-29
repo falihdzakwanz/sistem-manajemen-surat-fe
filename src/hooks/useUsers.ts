@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { User } from "@/types";
-import { apiClient } from "@/app/api/client";
+import { userService } from "@/services/userService";
 
 export default function useUsers() {
   const [users, setUsers] = useState<User[]>([]);
@@ -14,7 +14,7 @@ export default function useUsers() {
       try {
         setLoading(true);
         setError("");
-        const { data } = await apiClient.get("/api/users");
+        const { data } = await userService.getAllUsers();
         setUsers(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch users");
@@ -30,5 +30,6 @@ export default function useUsers() {
     users,
     loading,
     error,
+    setUsers
   };
 }
