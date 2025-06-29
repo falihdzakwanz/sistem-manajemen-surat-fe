@@ -38,10 +38,10 @@ export default function DeleteUserModal({
         )}
 
         <div className="flex justify-end gap-2">
-          <Button variant="secondary" onClick={onClose} disabled={isDeleting}>
+          <Button variant="primary" onClick={onClose} disabled={isDeleting}>
             Batal
           </Button>
-          <Button variant="danger" onClick={onConfirm} loading={isDeleting}>
+          <Button variant="danger" onClick={onConfirm} disabled={isDeleting} loading={isDeleting}>
             Hapus
           </Button>
         </div>

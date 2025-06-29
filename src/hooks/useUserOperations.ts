@@ -8,8 +8,16 @@ import { userService } from "@/services/userService";
 export default function useUserOperations() {
   const params = useParams();
   const router = useRouter();
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+
+  const [userData, setUserData] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const rawId = params?.id;
   const numericId =
@@ -20,15 +28,13 @@ export default function useUserOperations() {
       : NaN;
 
   const isEdit = !isNaN(numericId);
-  const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(isEdit);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isEdit) return;
 
     const fetchUser = async () => {
       try {
+        setLoading(true);
         const data = await userService.getById(numericId);
         setUserData(data);
       } catch (err) {
@@ -49,18 +55,23 @@ export default function useUserOperations() {
     role: "user";
   }) => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
+      setSubmitError("");
+
       if (isEdit) {
         await userService.updateUserById(numericId, data);
       } else {
         await userService.register(data);
       }
+
       router.push("/dashboard/users");
+      router.refresh();
     } catch (error) {
       console.error("Failed to submit user:", error);
+      setSubmitError("Terjadi kesalahan saat menyimpan data");
       throw error;
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 
@@ -81,17 +92,21 @@ export default function useUserOperations() {
       return false;
     } finally {
       setIsDeleting(false);
+      // setDeleteError("");
     }
   };
 
   return {
     isEdit,
     userData,
-    loading,
+    loading, 
     error,
     handleSubmit,
+    submitLoading,
+    submitError, 
     deleteUser,
     isDeleting,
     deleteError,
+    setDeleteError
   };
 }

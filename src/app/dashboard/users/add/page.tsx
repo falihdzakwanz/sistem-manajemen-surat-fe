@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import useUserOperations from "@/hooks/useUserOperations";
 
 export default function AddUserPage() {
-  const { handleSubmit } = useUserOperations();
+  const { handleSubmit, submitLoading } = useUserOperations();
 
   return (
     <div className="max-w-md mx-auto">
@@ -21,6 +21,7 @@ export default function AddUserPage() {
           </h1>
           <UserForm
             onSubmit={handleSubmit}
+            loading={submitLoading}           
           />
         </motion.div>
       </AnimatedDiv>

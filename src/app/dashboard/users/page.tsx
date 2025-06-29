@@ -29,7 +29,8 @@ export default function UsersList() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
-  const { deleteUser, isDeleting, deleteError } = useUserOperations();
+  const { deleteUser, isDeleting, deleteError, setDeleteError } =
+    useUserOperations();
 
   const filteredUsers = users.filter((user) => user.role !== "admin");
   const lettersForUser = selectedUser
@@ -40,7 +41,7 @@ export default function UsersList() {
     if (!userToDelete) return;
 
     const hasLetters = letters.some(
-      (letter) => letter.user_id === userToDelete.id
+      (letter) => letter.user!.id === userToDelete.id
     );
     const success = await deleteUser(userToDelete.id, hasLetters);
 
@@ -80,7 +81,7 @@ export default function UsersList() {
                 icon: <FaEdit size={16} />,
                 onClick: () => router.push(`/dashboard/users/${user.id}/edit`),
                 label: "Edit",
-                variant: "warning" as const
+                variant: "warning" as const,
               },
               {
                 icon: <FaTrash size={16} />,
@@ -102,7 +103,10 @@ export default function UsersList() {
 
       <DeleteUserModal
         isOpen={!!userToDelete}
-        onClose={() => setUserToDelete(null)}
+        onClose={() => {
+          setUserToDelete(null);
+          setDeleteError("");
+        }}
         user={userToDelete}
         isDeleting={isDeleting}
         error={deleteError}

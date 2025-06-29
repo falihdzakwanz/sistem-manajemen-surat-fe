@@ -25,7 +25,7 @@ interface UserFormProps {
 export default function UserForm({
   initialData,
   onSubmit,
-  loading = false,
+  loading,
 }: UserFormProps) {
   const isUpdateMode = !!initialData?.id;
 
@@ -37,12 +37,10 @@ export default function UserForm({
   });
 
   const [error, setError] = useState("");
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    // Basic validation
     if (!formData.nama_instansi || !formData.email_instansi) {
       setError("Nama instansi dan email harus diisi");
       return;
@@ -58,7 +56,6 @@ export default function UserForm({
       return;
     }
 
-    // Prepare submit data - don't include password if empty in update mode
     const submitData = {
       nama_instansi: formData.nama_instansi,
       email_instansi: formData.email_instansi,
@@ -69,11 +66,8 @@ export default function UserForm({
     try {
       await onSubmit(submitData);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Gagal menyimpan user. Silakan coba lagi."
-      );
+      console.error(err);
+      setError("Gagal menyimpan user. Silakan coba lagi.");
     }
   };
 
@@ -97,6 +91,7 @@ export default function UserForm({
         }
         required
         className="text-black"
+        placeholder="Dinas Kominfo Bandar Lampung"
       />
 
       <Input
@@ -111,6 +106,7 @@ export default function UserForm({
         className={`text-black ${
           isUpdateMode ? "opacity-70 bg-gray-100 cursor-not-allowed" : ""
         }`}
+        placeholder="diskominfo@balam.go.id"
       />
 
       <Input
@@ -125,43 +121,17 @@ export default function UserForm({
         required={!isUpdateMode}
         minLength={isUpdateMode ? undefined : 6}
         className="text-black"
+        placeholder="Minimal 6 karakter..."
       />
 
       <Button
         type="submit"
         disabled={loading}
         className="w-full"
-        variant="primary"
+        variant="success"
+        loading={loading}
       >
-        {loading ? (
-          <span className="flex items-center justify-center">
-            <svg
-              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Menyimpan...
-          </span>
-        ) : isUpdateMode ? (
-          "Update User"
-        ) : (
-          "Tambah User"
-        )}
+        {isUpdateMode ? "Update User" : "Tambah User"}
       </Button>
     </form>
   );
