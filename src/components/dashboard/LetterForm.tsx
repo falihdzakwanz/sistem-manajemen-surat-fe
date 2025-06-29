@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { Letter, User } from "@/types";
-import { formatToDDMMYYYY } from "@/utils/dateFormat";
+import { formatToDDMMYYYY } from "@/utils/dateUtils";
 
 interface LetterFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
@@ -30,7 +30,6 @@ export default function LetterForm({
 
     const formData = new FormData(e.currentTarget);
 
-    // Convert dates only if they're not empty
     const rawTanggalSurat = formData.get("tanggal_surat") as string;
     const rawTanggalMasuk = formData.get("tanggal_masuk") as string;
 
@@ -146,7 +145,7 @@ export default function LetterForm({
         />
         {initialData?.file_url && (
           <p className="text-sm text-gray-500 mt-1">
-            Current file: {initialData.file_url.split("/").pop()}
+            File Saat Ini: {initialData.file_url.split("\\").pop()}
           </p>
         )}
       </div>
@@ -154,13 +153,18 @@ export default function LetterForm({
       <div className="flex justify-end space-x-3 pt-4">
         <Button
           type="button"
-          variant="outline"
+          variant="primary"
           onClick={() => router.back()}
           disabled={loading}
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={loading}>
+        <Button
+          type="submit"
+          disabled={loading}
+          variant="success"
+          loading={loading}
+        >
           {loading ? "Menyimpan..." : "Simpan Surat"}
         </Button>
       </div>

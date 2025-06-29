@@ -5,10 +5,10 @@ import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
 import { FiMail, FiUsers, FiFileText, FiClock } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { apiClient } from "@/app/api/client";
 import { UserRole } from "@/types";
-import { parseDDMMYYYYToDate } from "@/utils/dateFormat";
+import { formatToLocaleDate } from "@/utils/dateUtils";
 import StatCard from "@/components/dashboard/StatCard";
+import { dashboardService } from "@/services/dashboardService";
 
 type DashboardStats = {
   totalSurat: number;
@@ -30,12 +30,9 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const endpoint =
+        const { data } = await dashboardService.getStats(
           user?.role === UserRole.ADMIN
-            ? "/api/dashboard/admin"
-            : "/api/dashboard/user";
-
-        const { data } = await apiClient.get(endpoint);
+        );
 
         setStats(data);
       } catch (error) {
@@ -99,7 +96,7 @@ export default function DashboardPage() {
         <StatCard
           icon={<FiMail className="text-green-500" size={24} />}
           title="Surat Saya"
-          value={stats?.totalSurat || 0} // For regular users, this shows their own letters
+          value={stats?.totalSurat || 0}
           loading={loading}
           color="green"
         />
@@ -153,14 +150,7 @@ export default function DashboardPage() {
                     </span>
                   </div>
                   <div className="text-xs text-gray-400 mt-2">
-                    {new Date(parseDDMMYYYYToDate(letter.tanggal_surat)).toLocaleDateString(
-                      "id-ID",
-                      {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      }
-                    )}
+                    {formatToLocaleDate(letter.tanggal_surat)}
                   </div>
                 </div>
               ))}
@@ -175,4 +165,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

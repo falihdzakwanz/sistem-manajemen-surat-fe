@@ -1,18 +1,19 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
 import LetterStatusBadge from "@/components/dashboard/LetterStatusBadge";
-import { formatDate } from "@/lib/utils";
 import Button from "@/components/ui/Button";
-import Link from "next/link";
 import useLetterDetail from "@/hooks/useLetterDetail";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import LetterDetailSection from "@/components/dashboard/LetterDetailSection";
+import { formatToLocaleDate } from "@/utils/dateUtils";
+import FileViewerSection from "@/components/dashboard/FileViewerSection";
 
 export default function LetterDetailPage() {
   const { nomor_registrasi } = useParams();
+  const router = useRouter();
   const { letter, loading, error } = useLetterDetail(
     nomor_registrasi as string
   );
@@ -33,9 +34,12 @@ export default function LetterDetailPage() {
     <div className="ml-64 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Detail Surat</h1>
-        <Link href="/dashboard/letters">
-          <Button variant="outline">Kembali ke Daftar Surat</Button>
-        </Link>
+        <Button
+          variant="primary"
+          onClick={() => router.push("/dashboard/letters")}
+        >
+          Kembali ke Daftar Surat
+        </Button>
       </div>
 
       <AnimatedDiv>
@@ -64,11 +68,11 @@ export default function LetterDetailPage() {
             />
             <LetterDetailSection
               title="Tanggal Surat"
-              value={formatDate(letter.tanggal_surat)}
+              value={formatToLocaleDate(letter.tanggal_surat)}
             />
             <LetterDetailSection
               title="Tanggal Diterima"
-              value={formatDate(letter.tanggal_masuk)}
+              value={formatToLocaleDate(letter.tanggal_masuk)}
             />
             <LetterDetailSection
               title="Nomor Registrasi"
@@ -76,39 +80,19 @@ export default function LetterDetailPage() {
             />
           </div>
 
-          <FileViewerSection fileUrl={letter.file_url} />
+          <FileViewerSection fileUrl={letter.file_url} nomorRegistrasi={letter.nomor_registrasi}/>
 
-          <ActionButtons letterId={nomor_registrasi as string} />
+          <Button
+            variant="warning"
+            onClick={() =>
+              router.push(`/dashboard/letters/${nomor_registrasi}/edit`)
+            }
+            className="mt-6"
+          >
+            Edit
+          </Button>
         </motion.div>
       </AnimatedDiv>
-    </div>
-  );
-}
-
-function FileViewerSection({ fileUrl }: { fileUrl: string }) {
-  return (
-    <div className="mt-6">
-      <h3 className="text-sm font-medium text-gray-500">Berkas</h3>
-      <a
-        href={`${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
-        }/${fileUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-2 inline-flex items-center text-blue-600 hover:underline"
-      >
-        Lihat Dokumen
-      </a>
-    </div>
-  );
-}
-
-function ActionButtons({ letterId }: { letterId: string }) {
-  return (
-    <div className="mt-6 flex space-x-3">
-      <Link href={`/dashboard/letters/${letterId}/edit`}>
-        <Button variant="outline">Edit</Button>
-      </Link>
     </div>
   );
 }

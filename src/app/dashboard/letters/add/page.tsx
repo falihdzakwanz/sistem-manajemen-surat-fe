@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import LetterForm from "@/components/dashboard/LetterForm";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
-import { apiClient } from "@/app/api/client";
 import useUsers from "@/hooks/useUsers";
+import { letterService } from "@/services/letterService";
 
 export default function AddLetterPage() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function AddLetterPage() {
       setIsSubmitting(true);
       setSubmitError("");
 
-      await apiClient.upload("/api/surat", formData);
+      await letterService.createLetter(formData);
       router.push("/dashboard/letters");
     } catch (err) {
       const errorMessage =

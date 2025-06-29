@@ -3,10 +3,10 @@
 import { motion } from "framer-motion";
 import { Letter } from "@/types";
 import LetterStatusBadge from "./LetterStatusBadge";
-import { formatDate } from "@/lib/utils";
 import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
 import { FiEye, FiEdit2, FiFileText, FiInbox } from "react-icons/fi";
+import { formatToLocaleDate } from "@/utils/dateUtils";
 
 interface LetterCardProps {
   letter: Letter;
@@ -43,10 +43,10 @@ export default function LetterCard({
         <div className="mt-4 text-sm text-gray-700">
           <p>Tujuan: {letter.user?.nama_instansi}</p>
           <p className="mt-1">
-            Tanggal Surat: {formatDate(letter.tanggal_surat)}
+            Tanggal Surat: {formatToLocaleDate(letter.tanggal_surat)}
           </p>
           <p className="mt-1">
-            Tanggal Masuk: {formatDate(letter.tanggal_masuk)}
+            Tanggal Masuk: {formatToLocaleDate(letter.tanggal_masuk)}
           </p>
         </div>
 

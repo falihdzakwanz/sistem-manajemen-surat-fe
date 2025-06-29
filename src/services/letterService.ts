@@ -21,15 +21,24 @@ export const letterService = {
     return apiClient.patch(`/api/surat/${nomorRegistrasi}/status`, { status });
   },
 
-  async updateLetter(nomorRegistrasi: number, formData: FormData) {
-    return apiClient.upload(`/api/surat/${nomorRegistrasi}`, formData);
+  async updateLetter(nomorRegistrasi: string | number, formData: FormData) {
+    const id =
+      typeof nomorRegistrasi === "string"
+        ? parseInt(nomorRegistrasi, 10)
+        : nomorRegistrasi;
+
+    if (isNaN(id)) {
+      throw new Error("Invalid nomor registrasi");
+    }
+
+    return apiClient.put(`/api/surat/${id}`, formData);
   },
 
   async downloadLetterFile(nomorRegistrasi: number) {
     const token = localStorage.getItem("token");
     const response = await fetch(
       `${
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
       }/surat/${nomorRegistrasi}/file`,
       {
         headers: {
