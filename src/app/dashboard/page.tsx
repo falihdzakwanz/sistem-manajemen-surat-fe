@@ -57,7 +57,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="ml-64 p-6 space-y-6">
+    <div className="p-6 space-y-6">
       <AnimatedDiv>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -17,13 +17,8 @@ export default function ProfilePage() {
 
   // Dummy last login tetap
   const lastLogin = "2025-06-17T10:30:00Z";
-
-  const logout = () => {
-    alert("Logout clicked (dummy mode)");
-  };
-
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 mt-6">
       <AnimatedDiv>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -50,24 +45,8 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 text-sm"
-              >
+              <Button className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500">
                 <FiKey /> Ganti Password
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 text-sm"
-              >
-                <FiEdit /> Edit Profil
-              </Button>
-              <Button
-                variant="danger"
-                className="flex items-center gap-2 text-sm"
-                onClick={logout}
-              >
-                <FiLogOut /> Logout
               </Button>
             </div>
           </div>

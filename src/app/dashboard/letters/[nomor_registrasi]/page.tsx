@@ -31,7 +31,7 @@ export default function LetterDetailPage() {
   }
 
   return (
-    <div className="ml-64 space-y-6">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Detail Surat</h1>
         <Button
@@ -80,7 +80,10 @@ export default function LetterDetailPage() {
             />
           </div>
 
-          <FileViewerSection fileUrl={letter.file_url} nomorRegistrasi={letter.nomor_registrasi}/>
+          <FileViewerSection
+            fileUrl={letter.file_url}
+            nomorRegistrasi={letter.nomor_registrasi}
+          />
 
           <Button
             variant="warning"
