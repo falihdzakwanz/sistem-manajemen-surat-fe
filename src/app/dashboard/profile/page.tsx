@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import { FiKey, FiLoader } from "react-icons/fi";
 import ProfileModal from "@/components/dashboard/ProfileModal";
 import { dashboardService } from "@/services/dashboardService";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,12 +27,11 @@ export default function ProfilePage() {
       try {
         setLoadingLetters(true);
 
-        // Use dashboardService to get user statistics
-        const { data } = await dashboardService.getStats(false); // false for user-specific stats
+        const { data } = await dashboardService.getStats(false);
 
         setUserLetters({
           incoming: data.totalSurat || 0,
-          outgoing: 0, // Will be updated when you have outgoing letters endpoint
+          outgoing: 0,
         });
       } catch (error) {
         console.error("Error fetching user letters:", error);
@@ -44,19 +44,10 @@ export default function ProfilePage() {
     fetchUserLetters();
   }, [user]);
 
-  // Show loading state while authentication is being checked
   if (loading) {
-    return (
-      <div className="max-w-3xl mx-auto flex items-center justify-center min-h-[400px]">
-        <div className="flex items-center gap-2 text-gray-600">
-          <FiLoader className="animate-spin" />
-          <span>Memuat profil...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />
   }
 
-  // Show message if user is not authenticated
   if (!user) {
     return (
       <div className="max-w-3xl mx-auto flex items-center justify-center min-h-[400px]">
@@ -84,7 +75,7 @@ export default function ProfilePage() {
 
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm text-gray-500">Nama Lengkap</h3>
+              <h3 className="text-sm text-gray-500">Nama Instansi</h3>
               <p className="text-lg text-gray-800 font-medium">
                 {user.nama_instansi || "Tidak tersedia"}
               </p>
