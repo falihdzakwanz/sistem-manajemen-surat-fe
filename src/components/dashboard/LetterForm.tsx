@@ -49,7 +49,7 @@ export default function LetterForm({
       await onSubmit(formData);
     } catch (err) {
       console.error("Form submission error:", err);
-      setError(err instanceof Error ? err.message : "Failed to save letter");
+      setError("Gagal menyimpan surat.");
     }
   };
 

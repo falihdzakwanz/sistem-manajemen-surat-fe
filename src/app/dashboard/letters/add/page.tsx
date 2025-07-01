@@ -22,9 +22,8 @@ export default function AddLetterPage() {
       await letterService.createLetter(formData);
       router.push("/dashboard/letters");
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to add letter";
-      setSubmitError(errorMessage);
+      console.error(err);
+      setSubmitError("Gagal menambahkan surat.");
     } finally {
       setIsSubmitting(false);
     }

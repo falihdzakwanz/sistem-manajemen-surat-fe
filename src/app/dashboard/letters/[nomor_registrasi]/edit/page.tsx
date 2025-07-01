@@ -46,9 +46,7 @@ export default function LetterEditPage() {
       router.refresh();
     } catch (err) {
       console.error("Error submitting form:", err);
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to update letter";
-      setSubmitError(errorMessage);
+      setSubmitError("Gagal mengupdate surat.");
       throw err;
     } finally {
       setSubmitLoading(false);
@@ -73,7 +71,7 @@ export default function LetterEditPage() {
   if (!letter) {
     return (
       <div className="max-w-3xl mx-auto text-center py-12">
-        Letter not found
+        Surat tidak ditemukan
       </div>
     );
   }
