@@ -1,22 +1,75 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import useAuth from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import Button from "@/components/ui/Button";
-import { FiEdit, FiKey, FiLogOut } from "react-icons/fi";
-import { dummyUser, dummyLetters } from "@/lib/dummy";
+import { FiKey, FiLoader } from "react-icons/fi";
+import ProfileModal from "@/components/dashboard/ProfileModal";
+import { dashboardService } from "@/services/dashboardService";
 
 export default function ProfilePage() {
-  // Simulasi login: ambil user pertama dari dummy
-  const currentUser = dummyUser.find((u) => u.role === "admin") || dummyUser[0];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userLetters, setUserLetters] = useState({ incoming: 0, outgoing: 0 });
+  const [loadingLetters, setLoadingLetters] = useState(true);
+  const { user, loading } = useAuth();
 
-  // Hitung jumlah surat masuk berdasarkan user (berdasarkan nama pengguna sebagai penerima)
-  const userSuratMasuk = dummyLetters.filter(
-    (l) => l.tujuan === currentUser.email_instansi
-  );
+  // Check if user role is 'user' to hide outgoing letters
+  const isUserRole = user?.role === "user";
 
-  // Dummy last login tetap
-  const lastLogin = "2025-06-17T10:30:00Z";
+  // Fetch user's letter statistics using dashboardService
+  useEffect(() => {
+    const fetchUserLetters = async () => {
+      if (!user) return;
+
+      try {
+        setLoadingLetters(true);
+
+        // Use dashboardService to get user statistics
+        const { data } = await dashboardService.getStats(false); // false for user-specific stats
+
+        setUserLetters({
+          incoming: data.totalSurat || 0,
+          outgoing: 0, // Will be updated when you have outgoing letters endpoint
+        });
+      } catch (error) {
+        console.error("Error fetching user letters:", error);
+        setUserLetters({ incoming: 0, outgoing: 0 });
+      } finally {
+        setLoadingLetters(false);
+      }
+    };
+
+    fetchUserLetters();
+  }, [user]);
+
+  // Show loading state while authentication is being checked
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center gap-2 text-gray-600">
+          <FiLoader className="animate-spin" />
+          <span>Memuat profil...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if user is not authenticated
+  if (!user) {
+    return (
+      <div className="max-w-3xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Anda belum login</p>
+          <Button onClick={() => (window.location.href = "/login")}>
+            Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto space-y-6 mt-6">
       <AnimatedDiv>
@@ -31,21 +84,31 @@ export default function ProfilePage() {
 
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm text-gray-500">
-                Nama Lengkap / email_instansi
-              </h3>
+              <h3 className="text-sm text-gray-500">Nama Lengkap</h3>
               <p className="text-lg text-gray-800 font-medium">
-                {currentUser?.nama_instansi} ({currentUser?.email_instansi})
+                {user.nama_instansi || "Tidak tersedia"}
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-sm text-gray-500">Email Instansi</h3>
+              <p className="text-gray-700">
+                {user.email_instansi || user.email_instansi || "Tidak tersedia"}
               </p>
             </div>
 
             <div>
               <h3 className="text-sm text-gray-500">Peran</h3>
-              <p className="text-gray-700 capitalize">{currentUser?.role}</p>
+              <p className="text-gray-700 capitalize">
+                {user.role || "Tidak tersedia"}
+              </p>
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500">
+              <Button
+                className="flex items-center gap-1 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
+                onClick={() => setIsModalOpen(true)}
+              >
                 <FiKey /> Ganti Password
               </Button>
             </div>
@@ -62,29 +125,47 @@ export default function ProfilePage() {
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             Aktivitas
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div
+            className={`grid gap-4 text-center ${
+              isUserRole ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"
+            }`}
+          >
             <div>
-              <p className="text-3xl font-bold text-blue-600">
-                {userSuratMasuk.length}
-              </p>
+              {loadingLetters ? (
+                <div className="flex items-center justify-center">
+                  <FiLoader className="animate-spin text-2xl text-blue-600" />
+                </div>
+              ) : (
+                <p className="text-3xl font-bold text-blue-600">
+                  {userLetters.incoming}
+                </p>
+              )}
               <p className="text-gray-600">Surat Masuk</p>
             </div>
-            <div>
-              <p className="text-3xl font-bold text-green-600">0</p>
-              <p className="text-gray-600">Surat Keluar</p>
-            </div>
-            <div>
-              <p className="text-md text-gray-700">
-                {new Date(lastLogin).toLocaleString("id-ID", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
-              </p>
-              <p className="text-gray-600">Terakhir Login</p>
-            </div>
+            {!isUserRole && (
+              <div>
+                {loadingLetters ? (
+                  <div className="flex items-center justify-center">
+                    <FiLoader className="animate-spin text-2xl text-green-600" />
+                  </div>
+                ) : (
+                  <p className="text-3xl font-bold text-green-600">
+                    {userLetters.outgoing}
+                  </p>
+                )}
+                <p className="text-gray-600">Surat Keluar</p>
+              </div>
+            )}
           </div>
         </motion.div>
       </AnimatedDiv>
+
+      {/* Modal Ganti Password */}
+      <ProfileModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        user={user}
+      />
     </div>
   );
 }

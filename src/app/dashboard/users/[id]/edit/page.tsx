@@ -17,7 +17,7 @@ export default function EditUserPage() {
   } = useUserOperations();
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto mt-6">
       <AnimatedDiv>
         <motion.div className="bg-white rounded-xl shadow-md p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
@@ -50,7 +50,7 @@ export default function EditUserPage() {
                     }
                   : undefined
               }
-              loading={submitLoading} 
+              loading={submitLoading}
             />
           )}
         </motion.div>

@@ -8,6 +8,7 @@ interface ModalProps {
   onClose: () => void;
   children: ReactNode;
   title?: string;
+  size?: "sm" | "md" | "lg" | "xl" | "2xl";
 }
 
 export default function Modal({
@@ -15,7 +16,16 @@ export default function Modal({
   onClose,
   children,
   title,
+  size = "2xl",
 }: ModalProps) {
+  const sizeClass = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    "2xl": "max-w-2xl",
+  }[size];
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -33,7 +43,7 @@ export default function Modal({
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-lg shadow-xl w-full max-w-2xl p-0 relative overflow-hidden"
+            className={`bg-white rounded-lg shadow-xl w-full ${sizeClass} p-0 relative overflow-hidden`}
           >
             <div className="p-6 max-h-[80vh] overflow-y-auto scrollbar-hidden rounded-b-2xl">
               <button

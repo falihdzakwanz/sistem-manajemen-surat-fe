@@ -93,7 +93,7 @@ export default function LetterEditPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto mt-6">
       <AnimatedDiv>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

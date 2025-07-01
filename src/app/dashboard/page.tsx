@@ -74,14 +74,20 @@ export default function DashboardPage() {
       </AnimatedDiv>
 
       {/* Statistik Utama */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <StatCard
-          icon={<FiFileText className="text-blue-500" size={24} />}
-          title="Total Surat"
-          value={stats?.totalSurat || 0}
-          loading={loading}
-          color="blue"
-        />
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
+          user?.role === "admin" ? "lg:grid-cols-2" : "lg:grid-cols-1"
+        }`}
+      >
+        {user?.role === UserRole.ADMIN && (
+          <StatCard
+            icon={<FiFileText className="text-blue-500" size={24} />}
+            title="Total Surat"
+            value={stats?.totalSurat || 0}
+            loading={loading}
+            color="blue"
+          />
+        )}
 
         {user?.role === UserRole.ADMIN && (
           <StatCard
@@ -92,14 +98,15 @@ export default function DashboardPage() {
             color="purple"
           />
         )}
-
-        <StatCard
-          icon={<FiMail className="text-green-500" size={24} />}
-          title="Surat Saya"
-          value={stats?.totalSurat || 0}
-          loading={loading}
-          color="green"
-        />
+        {user?.role === UserRole.USER && (
+          <StatCard
+            icon={<FiMail className="text-green-500" size={24} />}
+            title="Surat Saya"
+            value={stats?.totalSurat || 0}
+            loading={loading}
+            color="green"
+          />
+        )}
       </div>
 
       {/* Surat Terbaru */}
