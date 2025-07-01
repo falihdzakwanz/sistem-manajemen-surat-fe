@@ -43,7 +43,7 @@ export default function useLetters() {
       }
     };
     fetchLetters();
-  }, [user?.role]);
+  }, [user]);
 
   return {
     letters,
