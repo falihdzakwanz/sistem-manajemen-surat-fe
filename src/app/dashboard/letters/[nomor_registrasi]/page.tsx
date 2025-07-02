@@ -13,6 +13,7 @@ import FileViewerSection from "@/components/dashboard/FileViewerSection";
 
 export default function LetterDetailPage() {
   const router = useRouter();
+  const { nomor_registrasi } = useParams();
   const { letter, loading, error } = useLetterDetail();
 
   if (loading) {
@@ -77,10 +78,7 @@ export default function LetterDetailPage() {
             />
           </div>
 
-          <FileViewerSection
-            fileUrl={letter.file_url}
-            nomorRegistrasi={letter.nomor_registrasi}
-          />
+          <FileViewerSection nomorRegistrasi={letter.nomor_registrasi} />
 
           <Button
             variant="warning"

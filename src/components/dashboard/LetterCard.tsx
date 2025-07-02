@@ -5,8 +5,9 @@ import { Letter } from "@/types";
 import LetterStatusBadge from "./LetterStatusBadge";
 import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
-import { FiEye, FiEdit2, FiFileText, FiInbox } from "react-icons/fi";
+import { FiEye, FiEdit2, FiInbox } from "react-icons/fi";
 import { formatToLocaleDate } from "@/utils/dateUtils";
+import { FilePreviewDownload } from "./FilePreviewDownload";
 
 interface LetterCardProps {
   letter: Letter;
@@ -63,14 +64,9 @@ export default function LetterCard({
           </Button>
 
           {letter.file_url && (
-            <a
-              className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-600 hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 text-white text-sm font-medium rounded-md transition"
-              href={`${
-                process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
-              }/${letter.file_url}`}
-            >
-              <FiFileText /> Lihat File
-            </a>
+            <FilePreviewDownload
+              nomorRegistrasi={letter.nomor_registrasi}
+            />
           )}
 
           {isAdmin && (

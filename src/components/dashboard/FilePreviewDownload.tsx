@@ -1,17 +1,16 @@
 import { useState } from "react";
-import Button from "@/components/ui/Button"; // Pastikan path-nya sesuai dengan struktur folder kamu
+import { FiFileText } from "react-icons/fi";
 
-export default function FileDownloadButton({
+export function FilePreviewDownload({
   nomorRegistrasi,
 }: {
   nomorRegistrasi: number;
 }) {
   const [isDownloading, setIsDownloading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
     setIsDownloading(true);
-    setError("");
 
     try {
       const API_BASE_URL =
@@ -28,16 +27,11 @@ export default function FileDownloadButton({
       );
 
       if (!response.ok) {
-        throw new Error(
-          response.status === 401
-            ? "Anda tidak memiliki izin."
-            : "Gagal mengunduh dokumen."
-        );
+        throw new Error("Gagal mengunduh file.");
       }
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-
       const link = document.createElement("a");
       link.href = url;
       link.download = `surat-${nomorRegistrasi}.pdf`;
@@ -46,25 +40,22 @@ export default function FileDownloadButton({
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Gagal mengunduh dokumen.");
+      console.error("Terdapat kesalahan saat mengunduh file", err);
     } finally {
       setIsDownloading(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-2 mt-4">
-      <Button
-        onClick={handleDownload}
-        loading={isDownloading}
-        loadingText="Mengunduh..."
-        variant="success"
-        size="md"
-        className="w-fit"
-      >
-        Unduh Dokumen
-      </Button>
-      {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
-    </div>
+    <a
+      href="#"
+      onClick={handleDownload}
+      className={`inline-flex items-center gap-1 px-3 py-1.5 ${
+        isDownloading ? "bg-slate-400" : "bg-slate-600 hover:bg-slate-700"
+      } focus:ring-2 focus:ring-slate-500 text-white text-sm font-medium rounded-md transition`}
+    >
+      <FiFileText className={isDownloading ? "animate-spin" : ""} />
+      {isDownloading ? "Mengunduh..." : "Lihat File"}
+    </a>
   );
 }
