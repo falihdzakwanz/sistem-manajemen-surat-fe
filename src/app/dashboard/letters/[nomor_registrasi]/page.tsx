@@ -10,10 +10,14 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import LetterDetailSection from "@/components/dashboard/LetterDetailSection";
 import { formatToLocaleDate } from "@/utils/dateUtils";
 import FileViewerSection from "@/components/dashboard/FileViewerSection";
+import useAuth from "@/hooks/useAuth";
 
 export default function LetterDetailPage() {
   const router = useRouter();
   const { nomor_registrasi } = useParams();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   const { letter, loading, error } = useLetterDetail();
 
   if (loading) {
@@ -80,15 +84,17 @@ export default function LetterDetailPage() {
 
           <FileViewerSection nomorRegistrasi={letter.nomor_registrasi} />
 
-          <Button
-            variant="warning"
-            onClick={() =>
-              router.push(`/dashboard/letters/${nomor_registrasi}/edit`)
-            }
-            className="mt-6"
-          >
-            Edit
-          </Button>
+          {isAdmin && (
+            <Button
+              variant="warning"
+              onClick={() =>
+                router.push(`/dashboard/letters/${nomor_registrasi}/edit`)
+              }
+              className="mt-6"
+            >
+              Edit
+            </Button>
+          )}
         </motion.div>
       </AnimatedDiv>
     </div>

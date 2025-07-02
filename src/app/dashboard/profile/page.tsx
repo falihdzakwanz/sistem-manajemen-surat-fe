@@ -27,10 +27,13 @@ export default function ProfilePage() {
       try {
         setLoadingLetters(true);
 
-        const { data } = await dashboardService.getStats(false);
+        const { data } = await dashboardService.getStats(user.role === "admin");
 
         setUserLetters({
-          incoming: data.totalSurat || 0,
+          incoming:
+            user.role === "admin"
+              ? data.surat_dibuat || data.totalSurat || 0
+              : data.totalSurat || 0,
           outgoing: 0,
         });
       } catch (error) {
@@ -45,7 +48,7 @@ export default function ProfilePage() {
   }, [user]);
 
   if (loading) {
-    return <LoadingSpinner />
+    return <LoadingSpinner />;
   }
 
   if (!user) {
@@ -116,11 +119,7 @@ export default function ProfilePage() {
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             Aktivitas
           </h2>
-          <div
-            className={`grid gap-4 text-center ${
-              isUserRole ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"
-            }`}
-          >
+          <div className="grid gap-4 text-center grid-cols-1">
             <div>
               {loadingLetters ? (
                 <div className="flex items-center justify-center">
@@ -131,22 +130,8 @@ export default function ProfilePage() {
                   {userLetters.incoming}
                 </p>
               )}
-              <p className="text-gray-600">Surat Masuk</p>
+              <p className="text-gray-600">Total Surat</p>
             </div>
-            {!isUserRole && (
-              <div>
-                {loadingLetters ? (
-                  <div className="flex items-center justify-center">
-                    <FiLoader className="animate-spin text-2xl text-green-600" />
-                  </div>
-                ) : (
-                  <p className="text-3xl font-bold text-green-600">
-                    {userLetters.outgoing}
-                  </p>
-                )}
-                <p className="text-gray-600">Surat Keluar</p>
-              </div>
-            )}
           </div>
         </motion.div>
       </AnimatedDiv>

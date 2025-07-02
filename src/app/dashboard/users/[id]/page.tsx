@@ -15,6 +15,7 @@ import LetterCard from "@/components/dashboard/LetterCard";
 export default function ReceiverDetailPage() {
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const {
     userData: user,
     loading,
@@ -24,6 +25,7 @@ export default function ReceiverDetailPage() {
     deleteError,
     setDeleteError,
   } = useUserOperations();
+
   const { letters, updateLetterStatus, isAdmin } = useLetters();
 
   const handleDeleteConfirm = async () => {
@@ -34,7 +36,7 @@ export default function ReceiverDetailPage() {
     if (success) {
       router.push("/dashboard/users");
     } else {
-      setIsDeleteModalOpen(true); // Keep modal open if error occurs
+      setIsDeleteModalOpen(true);
     }
   };
 
@@ -43,19 +45,6 @@ export default function ReceiverDetailPage() {
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
-    );
-  }
-
-  if (error || deleteError) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md mx-4 my-6"
-      >
-        <p className="font-medium">Terjadi Kesalahan</p>
-        <p>{error || deleteError}</p>
-      </motion.div>
     );
   }
 
@@ -99,50 +88,38 @@ export default function ReceiverDetailPage() {
           className="bg-white rounded-xl shadow-md p-6 border border-gray-100"
         >
           <div className="space-y-4">
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
-            >
+            <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors">
               <h3 className="text-sm font-medium text-gray-500">
                 Nama Instansi
               </h3>
               <p className="mt-1 text-lg font-semibold text-gray-900">
                 {user.nama_instansi}
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
-            >
+            <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors">
               <h3 className="text-sm font-medium text-gray-500">
                 Email Instansi
               </h3>
               <p className="mt-1 text-lg text-gray-900">
                 {user.email_instansi}
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
-            >
+            <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors">
               <h3 className="text-sm font-medium text-gray-500">Total Surat</h3>
               <p className="mt-1 text-lg text-gray-900">{user.total_surat}</p>
-            </motion.div>
+            </div>
 
             {user.created_at && (
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
+              <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 <h3 className="text-sm font-medium text-gray-500">
                   Tanggal Dibuat
                 </h3>
                 <p className="mt-1 text-lg text-gray-900">
                   {formatToLocaleDate(user.created_at)}
                 </p>
-              </motion.div>
+              </div>
             )}
           </div>
 
@@ -156,6 +133,7 @@ export default function ReceiverDetailPage() {
           </div>
         </motion.div>
       </AnimatedDiv>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

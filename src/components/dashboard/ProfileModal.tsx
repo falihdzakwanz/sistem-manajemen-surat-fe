@@ -119,9 +119,6 @@ export default function ProfileModal({
     >
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password Baru
-          </label>
           <Input
             label="Password Baru"
             type="password"
@@ -139,9 +136,6 @@ export default function ProfileModal({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Konfirmasi Password
-          </label>
           <Input
             label="Konfirmasi Password Baru"
             type="password"

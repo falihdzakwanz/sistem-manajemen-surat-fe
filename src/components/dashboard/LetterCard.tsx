@@ -26,9 +26,9 @@ export default function LetterCard({
     <motion.div
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200"
+      className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 h-full flex flex-col"
     >
-      <div className="p-4">
+      <div className="p-4 flex flex-col justify-between h-full">
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-lg font-semibold text-gray-800">
@@ -64,9 +64,7 @@ export default function LetterCard({
           </Button>
 
           {letter.file_url && (
-            <FilePreviewDownload
-              nomorRegistrasi={letter.nomor_registrasi}
-            />
+            <FilePreviewDownload nomorRegistrasi={letter.nomor_registrasi} />
           )}
 
           {isAdmin && (
