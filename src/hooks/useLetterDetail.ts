@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { Letter } from "@/types";
 import { apiClient } from "@/app/api/client";
+import { useParams } from "next/navigation";
 
-export default function useLetterDetail(nomor_registrasi: string) {
+export default function useLetterDetail() {
+  const { nomor_registrasi } = useParams();
   const [letter, setLetter] = useState<Letter | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

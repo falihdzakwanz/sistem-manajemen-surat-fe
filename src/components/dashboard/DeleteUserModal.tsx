@@ -26,10 +26,10 @@ export default function DeleteUserModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Konfirmasi Hapus User">
       <div className="space-y-4">
-        <p>
+        <div className="text-gray-600">
           Apakah Anda yakin ingin menghapus user{" "}
           <strong>{user.nama_instansi}</strong>?
-        </p>
+        </div>
 
         {error && (
           <div className="bg-red-100 text-red-700 p-2 rounded-md text-sm">
@@ -41,7 +41,12 @@ export default function DeleteUserModal({
           <Button variant="primary" onClick={onClose} disabled={isDeleting}>
             Batal
           </Button>
-          <Button variant="danger" onClick={onConfirm} disabled={isDeleting} loading={isDeleting}>
+          <Button
+            variant="danger"
+            onClick={onConfirm}
+            disabled={isDeleting}
+            loading={isDeleting}
+          >
             Hapus
           </Button>
         </div>

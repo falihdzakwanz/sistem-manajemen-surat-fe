@@ -24,11 +24,11 @@ const StatCard = ({ icon, title, value, loading, color }: StatCardProps) => {
       >
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-sm font-medium text-gray-500">{title}</p>
+            <p className="text-sm font-medium text-black">{title}</p>
             {loading ? (
               <div className="h-8 w-16 bg-gray-200 rounded mt-2 animate-pulse"></div>
             ) : (
-              <p className="text-2xl font-bold mt-1">
+              <p className="text-2xl font-bold mt-1 text-gray-500">
                 {value.toLocaleString("id-ID")}
               </p>
             )}

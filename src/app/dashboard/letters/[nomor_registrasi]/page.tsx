@@ -12,11 +12,8 @@ import { formatToLocaleDate } from "@/utils/dateUtils";
 import FileViewerSection from "@/components/dashboard/FileViewerSection";
 
 export default function LetterDetailPage() {
-  const { nomor_registrasi } = useParams();
   const router = useRouter();
-  const { letter, loading, error } = useLetterDetail(
-    nomor_registrasi as string
-  );
+  const { letter, loading, error } = useLetterDetail();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -31,7 +28,7 @@ export default function LetterDetailPage() {
   }
 
   return (
-    <div className="ml-64 space-y-6">
+    <div className="space-y-6 mt-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Detail Surat</h1>
         <Button
@@ -80,7 +77,10 @@ export default function LetterDetailPage() {
             />
           </div>
 
-          <FileViewerSection fileUrl={letter.file_url} nomorRegistrasi={letter.nomor_registrasi}/>
+          <FileViewerSection
+            fileUrl={letter.file_url}
+            nomorRegistrasi={letter.nomor_registrasi}
+          />
 
           <Button
             variant="warning"

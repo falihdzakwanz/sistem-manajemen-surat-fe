@@ -1,47 +1,40 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { apiClient } from "@/app/api/client";
-import { User } from "@/types";
+import { useRouter } from "next/navigation";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import { motion } from "framer-motion";
-import { formatDate } from "@/lib/utils";
 import Button from "@/components/ui/Button";
 import Link from "next/link";
+import useUserOperations from "@/hooks/useUserOperations";
+import DeleteUserModal from "@/components/dashboard/DeleteUserModal";
+import { useState } from "react";
+import { formatToLocaleDate } from "@/utils/dateUtils";
+import useLetters from "@/hooks/useLetters";
+import LetterCard from "@/components/dashboard/LetterCard";
 
 export default function ReceiverDetailPage() {
-  const { id } = useParams();
   const router = useRouter();
-  const [user, setReceiver] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const {
+    userData: user,
+    loading,
+    error,
+    deleteUser,
+    isDeleting,
+    deleteError,
+    setDeleteError,
+  } = useUserOperations();
+  const { letters, updateLetterStatus, isAdmin } = useLetters();
 
-  useEffect(() => {
-    const fetchReceiver = async () => {
-      try {
-        const { data } = await apiClient.get(`/penerima/${id}`, token);
-        setReceiver(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch user");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleDeleteConfirm = async () => {
+    if (!user) return;
 
-    fetchReceiver();
-  }, [id, token]);
+    const success = await deleteUser(user.id, (user.total_surat || 0) > 0);
 
-  const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      try {
-        await apiClient.delete(`/penerima/${id}`, token);
-        router.push("/dashboard/receivers");
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to delete user");
-      }
+    if (success) {
+      router.push("/dashboard/users");
+    } else {
+      setIsDeleteModalOpen(true); // Keep modal open if error occurs
     }
   };
 
@@ -53,20 +46,48 @@ export default function ReceiverDetailPage() {
     );
   }
 
-  if (error) {
-    return <div className="text-red-500 p-4">{error}</div>;
+  if (error || deleteError) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md mx-4 my-6"
+      >
+        <p className="font-medium">Terjadi Kesalahan</p>
+        <p>{error || deleteError}</p>
+      </motion.div>
+    );
   }
 
   if (!user) {
-    return <div className="text-center py-12">User not found</div>;
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center py-12 text-gray-600"
+      >
+        Data penerima tidak ditemukan
+      </motion.div>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-6 mt-6"
+    >
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">User Details</h1>
-        <Link href="/dashboard/receivers">
-          <Button variant="outline">Back to Receivers</Button>
+        <motion.h1
+          initial={{ x: -20 }}
+          animate={{ x: 0 }}
+          className="text-2xl font-bold text-gray-800"
+        >
+          Detail Penerima
+        </motion.h1>
+        <Link href="/dashboard/users">
+          <Button variant="primary">Kembali ke Daftar Penerima</Button>
         </Link>
       </div>
 
@@ -74,50 +95,96 @@ export default function ReceiverDetailPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-md p-6"
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="bg-white rounded-xl shadow-md p-6 border border-gray-100"
         >
           <div className="space-y-4">
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Name</h3>
-              <p className="mt-1 text-gray-900">{user.nama_instansi}</p>
-            </div>
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-sm font-medium text-gray-500">
+                Nama Instansi
+              </h3>
+              <p className="mt-1 text-lg font-semibold text-gray-900">
+                {user.nama_instansi}
+              </p>
+            </motion.div>
 
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Email</h3>
-              <p className="mt-1 text-gray-900">{user.email_instansi}</p>
-            </div>
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-sm font-medium text-gray-500">
+                Email Instansi
+              </h3>
+              <p className="mt-1 text-lg text-gray-900">
+                {user.email_instansi}
+              </p>
+            </motion.div>
 
-            {user.total_surat && (
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">
-                  Total Letters
-                </h3>
-                <p className="mt-1 text-gray-900">{user.total_surat}</p>
-              </div>
-            )}
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-sm font-medium text-gray-500">Total Surat</h3>
+              <p className="mt-1 text-lg text-gray-900">{user.total_surat}</p>
+            </motion.div>
 
             {user.created_at && (
-              <div>
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
+              >
                 <h3 className="text-sm font-medium text-gray-500">
-                  Created At
+                  Tanggal Dibuat
                 </h3>
-                <p className="mt-1 text-gray-900">
-                  {formatDate(user.created_at)}
+                <p className="mt-1 text-lg text-gray-900">
+                  {formatToLocaleDate(user.created_at)}
                 </p>
-              </div>
+              </motion.div>
             )}
           </div>
 
           <div className="mt-6 flex space-x-3">
-            <Link href={`/dashboard/receivers/${id}/edit`}>
-              <Button variant="outline">Edit</Button>
+            <Link href={`/dashboard/users/${user.id}/edit`}>
+              <Button variant="warning">Edit</Button>
             </Link>
-            <Button variant="danger" onClick={handleDelete}>
-              Delete
+            <Button variant="danger" onClick={() => setIsDeleteModalOpen(true)}>
+              Hapus
             </Button>
           </div>
         </motion.div>
       </AnimatedDiv>
-    </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="grid grid-cols-3 gap-4"
+      >
+        {letters
+          .filter((letter) => letter.user?.id === user.id)
+          .map((letter, index) => (
+            <AnimatedDiv key={letter.nomor_registrasi} delay={index * 0.05}>
+              <LetterCard
+                letter={letter}
+                onStatusChange={updateLetterStatus}
+                isAdmin={isAdmin}
+              />
+            </AnimatedDiv>
+          ))}
+      </motion.div>
+
+      <DeleteUserModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setDeleteError("");
+        }}
+        user={user}
+        isDeleting={isDeleting}
+        error={deleteError}
+        onConfirm={handleDeleteConfirm}
+      />
+    </motion.div>
   );
 }

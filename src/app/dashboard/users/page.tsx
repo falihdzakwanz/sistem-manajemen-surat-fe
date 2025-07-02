@@ -64,7 +64,7 @@ export default function UsersList() {
   }
 
   return (
-    <div className="relative p-6 ml-64">
+    <div className="relative p-6">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -88,6 +88,12 @@ export default function UsersList() {
                 onClick: () => setUserToDelete(user),
                 label: "Delete",
                 variant: "danger" as const,
+              },
+              {
+                icon: <FaEdit size={16} />,
+                onClick: () => router.push(`/dashboard/users/${user.id}`),
+                label: "Detail",
+                variant: "primary" as const,
               },
             ]}
           />

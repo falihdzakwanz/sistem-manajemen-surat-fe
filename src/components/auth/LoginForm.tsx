@@ -24,11 +24,8 @@ export default function LoginForm() {
       await login(email, password);
       router.push("/dashboard");
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Login failed. Please check your credentials."
-      );
+      console.error(err);
+      setError("Email atau Password Salah!");
     } finally {
       setLoading(false);
     }
