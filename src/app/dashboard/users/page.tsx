@@ -89,6 +89,12 @@ export default function UsersList() {
                 label: "Delete",
                 variant: "danger" as const,
               },
+              {
+                icon: <FaEdit size={16} />,
+                onClick: () => router.push(`/dashboard/users/${user.id}`),
+                label: "Detail",
+                variant: "primary" as const,
+              },
             ]}
           />
         ))}

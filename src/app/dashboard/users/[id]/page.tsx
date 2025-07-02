@@ -9,6 +9,8 @@ import useUserOperations from "@/hooks/useUserOperations";
 import DeleteUserModal from "@/components/dashboard/DeleteUserModal";
 import { useState } from "react";
 import { formatToLocaleDate } from "@/utils/dateUtils";
+import useLetters from "@/hooks/useLetters";
+import LetterCard from "@/components/dashboard/LetterCard";
 
 export default function ReceiverDetailPage() {
   const router = useRouter();
@@ -22,6 +24,7 @@ export default function ReceiverDetailPage() {
     deleteError,
     setDeleteError,
   } = useUserOperations();
+  const { letters, updateLetterStatus, isAdmin } = useLetters();
 
   const handleDeleteConfirm = async () => {
     if (!user) return;
@@ -29,7 +32,7 @@ export default function ReceiverDetailPage() {
     const success = await deleteUser(user.id, (user.total_surat || 0) > 0);
 
     if (success) {
-      router.push("/dashboard/receivers");
+      router.push("/dashboard/users");
     } else {
       setIsDeleteModalOpen(true); // Keep modal open if error occurs
     }
@@ -73,7 +76,7 @@ export default function ReceiverDetailPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="space-y-6"
+      className="space-y-6 mt-6"
     >
       <div className="flex justify-between items-center">
         <motion.h1
@@ -120,17 +123,13 @@ export default function ReceiverDetailPage() {
               </p>
             </motion.div>
 
-            {user.total_surat && (
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <h3 className="text-sm font-medium text-gray-500">
-                  Total Surat
-                </h3>
-                <p className="mt-1 text-lg text-gray-900">{user.total_surat}</p>
-              </motion.div>
-            )}
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              className="p-3 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <h3 className="text-sm font-medium text-gray-500">Total Surat</h3>
+              <p className="mt-1 text-lg text-gray-900">{user.total_surat}</p>
+            </motion.div>
 
             {user.created_at && (
               <motion.div
@@ -148,7 +147,7 @@ export default function ReceiverDetailPage() {
           </div>
 
           <div className="mt-6 flex space-x-3">
-            <Link href={`/dashboard/receivers/${user.id}/edit`}>
+            <Link href={`/dashboard/users/${user.id}/edit`}>
               <Button variant="warning">Edit</Button>
             </Link>
             <Button variant="danger" onClick={() => setIsDeleteModalOpen(true)}>
@@ -157,6 +156,23 @@ export default function ReceiverDetailPage() {
           </div>
         </motion.div>
       </AnimatedDiv>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="grid grid-cols-3 gap-4"
+      >
+        {letters
+          .filter((letter) => letter.user?.id === user.id)
+          .map((letter, index) => (
+            <AnimatedDiv key={letter.nomor_registrasi} delay={index * 0.05}>
+              <LetterCard
+                letter={letter}
+                onStatusChange={updateLetterStatus}
+                isAdmin={isAdmin}
+              />
+            </AnimatedDiv>
+          ))}
+      </motion.div>
 
       <DeleteUserModal
         isOpen={isDeleteModalOpen}
