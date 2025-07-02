@@ -12,11 +12,8 @@ import { formatToLocaleDate } from "@/utils/dateUtils";
 import FileViewerSection from "@/components/dashboard/FileViewerSection";
 
 export default function LetterDetailPage() {
-  const { nomor_registrasi } = useParams();
   const router = useRouter();
-  const { letter, loading, error } = useLetterDetail(
-    nomor_registrasi as string
-  );
+  const { letter, loading, error } = useLetterDetail();
 
   if (loading) {
     return <LoadingSpinner />;
