@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Letter } from "@/types";
+import { Letter, User } from "@/types";
 import { letterService } from "@/services/letterService";
-import useAuth from "./useAuth";
+import { apiClient } from "@/app/api/client";
 
 export default function useLetters() {
-  const { user } = useAuth();
   const [letters, setLetters] = useState<Letter[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const updateLetterStatus = async (
     id: number,
@@ -29,21 +29,34 @@ export default function useLetters() {
   };
 
   useEffect(() => {
-    const fetchLetters = async () => {
+    const fetchUserAndLetters = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await letterService.getLetters(user?.role === "user");
-        setLetters(response.data);
+
+        // Fetch user
+        const userResponse = await apiClient.get("/api/users/current");
+        const currentUser = userResponse.data;
+        setUser(currentUser);
+        localStorage.setItem("user", JSON.stringify(currentUser));
+
+        // Fetch letters
+        const letterResponse = await letterService.getLetters(
+          currentUser.role === "user"
+        );
+        setLetters(letterResponse.data);
       } catch (err) {
-        setError("Failed to fetch letters");
-        console.error("Failed to fetch letters:", err);
+        setError("Failed to fetch user or letters");
+        console.error("Error:", err);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       } finally {
         setLoading(false);
       }
     };
-    fetchLetters();
-  }, [user]);
+
+    fetchUserAndLetters();
+  }, []);
 
   return {
     letters,
