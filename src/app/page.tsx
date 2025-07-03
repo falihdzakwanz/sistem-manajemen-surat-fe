@@ -27,53 +27,68 @@ export default function HomePage() {
             digital yang digunakan untuk mengelola surat SENAPATI secara modern,
             aman, dan efisien.
           </motion.p>
-          <Link href="/login">
-            <button className="mt-4 px-7 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition font-medium text-base">
-              Masuk ke SIMAS
-            </button>
-          </Link>
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-5xl font-extrabold text-blue-700"
+          >
+            <Link href="/login">
+              <button className="mt-4 px-7 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition font-medium text-base">
+                Masuk ke SIMAS
+              </button>
+            </Link>
+          </motion.h1>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 px-6">
-          {[
-            {
-              icon: <FiInbox className="text-blue-600 text-4xl mb-3 mx-auto" />,
-              title: "Manajemen Surat",
-              desc: "Kelola manajemen surat secara terstruktur.",
-            },
-            {
-              icon: (
-                <FiUsers className="text-purple-600 text-4xl mb-3 mx-auto" />
-              ),
-              title: "Manajemen Penerima",
-              desc: "Atur data instansi penerima dengan mudah.",
-            },
-            {
-              icon: (
-                <FiFilePlus className="text-yellow-600 text-4xl mb-3 mx-auto" />
-              ),
-              title: "Input Surat Baru",
-              desc: "Tambahkan surat baru hanya dalam beberapa klik.",
-            },
-          ].map((feature, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ y: -6 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white border rounded-xl p-6 text-center shadow-sm hover:shadow-md"
-            >
-              {feature.icon}
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-gray-600">{feature.desc}</p>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 px-6">
+            {[
+              {
+                icon: (
+                  <FiInbox className="text-blue-600 text-4xl mb-3 mx-auto" />
+                ),
+                title: "Manajemen Surat",
+                desc: "Kelola manajemen surat secara terstruktur.",
+              },
+              {
+                icon: (
+                  <FiUsers className="text-purple-600 text-4xl mb-3 mx-auto" />
+                ),
+                title: "Manajemen Penerima",
+                desc: "Atur data instansi penerima dengan mudah.",
+              },
+              {
+                icon: (
+                  <FiFilePlus className="text-yellow-600 text-4xl mb-3 mx-auto" />
+                ),
+                title: "Input Surat Baru",
+                desc: "Tambahkan surat baru hanya dalam beberapa klik.",
+              },
+            ].map((feature, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white border rounded-xl p-6 text-center shadow-sm hover:shadow-md"
+              >
+                {feature.icon}
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-gray-600">{feature.desc}</p>
+              </motion.div>
+            ))}
+          </div>
 
-        <footer className="text-xs text-gray-500 mt-4">
-          &copy; {new Date().getFullYear()} SIMAS - Komdigi Pemerintah Kota
-          Bandar Lampung
-        </footer>
+          <footer className="text-xs text-gray-500 mt-4">
+            &copy; {new Date().getFullYear()} SIMAS - Komdigi Pemerintah Kota
+            Bandar Lampung
+          </footer>
+        </motion.div>
       </section>
     </main>
   );
