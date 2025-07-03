@@ -43,7 +43,7 @@ export default function DashboardPage() {
     };
 
     fetchStats();
-  }, [user?.role]);
+  }, [user]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
