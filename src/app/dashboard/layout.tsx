@@ -49,7 +49,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       icon: <CgProfile />,
       label: "Profil Pengguna",
     },
-    { href: "/dashboard/letters", icon: <FiInbox />, label: "Surat Masuk" },
+    { href: "/dashboard/letters", icon: <FiInbox />, label: "Kotak Surat" },
     ...(user?.role === "admin"
       ? [
           {

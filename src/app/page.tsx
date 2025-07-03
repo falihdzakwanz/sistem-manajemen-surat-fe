@@ -2,83 +2,79 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FiInbox, FiSend, FiUsers, FiFilePlus } from "react-icons/fi";
+import { FiInbox, FiUsers, FiFilePlus } from "react-icons/fi";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Hero Section */}
-      <section className="bg-white py-16 px-6 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl font-bold mb-4"
-        >
-          Kelola Surat Masuk & Keluar dengan Mudah
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="text-lg text-gray-600 max-w-xl mx-auto"
-        >
-          Sistem manajemen surat digital untuk efisiensi kerja dan pelacakan
-          dokumen secara real-time.
-        </motion.p>
-        <div className="mt-8 flex justify-center space-x-4">
+    <main className="min-h-screen bg-gray-50 text-gray-800 flex items-center justify-center px-4">
+      <section className="w-full max-w-5xl space-y-12 py-16 text-center">
+        <div className="space-y-6">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-5xl font-extrabold text-blue-700"
+          >
+            Selamat Datang di SIMAS
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed"
+          >
+            SIMAS (Sistem Manajemen Surat) adalah sistem berbentuk website
+            digital yang digunakan untuk mengelola surat SENAPATI secara modern,
+            aman, dan efisien.
+          </motion.p>
           <Link href="/login">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
-              Masuk
+            <button className="mt-4 px-7 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition font-medium text-base">
+              Masuk ke SIMAS
             </button>
           </Link>
         </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-14 px-6">
-        <h2 className="text-2xl font-bold text-center mb-10">Fitur Unggulan</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 px-6">
           {[
             {
-              icon: <FiInbox className="text-blue-600 text-3xl mb-3" />,
-              title: "Surat Masuk",
-              desc: "Kelola surat masuk secara efisien dan terorganisir.",
+              icon: <FiInbox className="text-blue-600 text-4xl mb-3 mx-auto" />,
+              title: "Manajemen Surat",
+              desc: "Kelola manajemen surat secara terstruktur.",
             },
             {
-              icon: <FiSend className="text-green-600 text-3xl mb-3" />,
-              title: "Surat Keluar",
-              desc: "Kirim surat keluar dengan mudah dan cepat.",
-            },
-            {
-              icon: <FiUsers className="text-purple-600 text-3xl mb-3" />,
+              icon: (
+                <FiUsers className="text-purple-600 text-4xl mb-3 mx-auto" />
+              ),
               title: "Manajemen Penerima",
-              desc: "Tambahkan dan atur daftar penerima surat.",
+              desc: "Atur data instansi penerima dengan mudah.",
             },
             {
-              icon: <FiFilePlus className="text-yellow-600 text-3xl mb-3" />,
-              title: "Tambah Surat",
-              desc: "Input surat masuk atau keluar hanya dalam hitungan detik.",
+              icon: (
+                <FiFilePlus className="text-yellow-600 text-4xl mb-3 mx-auto" />
+              ),
+              title: "Input Surat Baru",
+              desc: "Tambahkan surat baru hanya dalam beberapa klik.",
             },
-          ].map((f, i) => (
+          ].map((feature, i) => (
             <motion.div
               key={i}
-              whileHover={{ y: -5 }}
-              className="bg-white rounded-xl shadow p-6 text-center"
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white border rounded-xl p-6 text-center shadow-sm hover:shadow-md"
             >
-              {f.icon}
-              <h3 className="text-lg font-semibold mb-2">{f.title}</h3>
-              <p className="text-sm text-gray-600">{f.desc}</p>
+              {feature.icon}
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-sm text-gray-600">{feature.desc}</p>
             </motion.div>
           ))}
         </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="text-center py-6 text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} Sistem Manajemen Surat. All rights
-        reserved.
-      </footer>
+        <footer className="text-xs text-gray-500 mt-4">
+          &copy; {new Date().getFullYear()} SIMAS - Komdigi Pemerintah Kota
+          Bandar Lampung
+        </footer>
+      </section>
     </main>
   );
 }

@@ -33,7 +33,7 @@ export default function LettersPage() {
   return (
     <div className="space-y-6 p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Surat Masuk</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Kotak Surat</h1>
         {isAdmin && (
           <Link href="/dashboard/letters/add">
             <Button>+ Tambah Surat</Button>

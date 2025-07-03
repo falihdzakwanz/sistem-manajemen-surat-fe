@@ -40,7 +40,7 @@ export default function LetterDetailPage() {
           variant="primary"
           onClick={() => router.push("/dashboard/letters")}
         >
-          Kembali ke Daftar Surat
+          Kembali ke Kotak Surat
         </Button>
       </div>
 

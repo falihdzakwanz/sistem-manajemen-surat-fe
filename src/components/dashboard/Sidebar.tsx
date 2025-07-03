@@ -30,7 +30,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
       icon: <FiInbox />,
       label: "Profile Pengguna",
     },
-    { href: "/dashboard/letters", icon: <FiInbox />, label: "Surat Masuk" },
+    { href: "/dashboard/letters", icon: <FiInbox />, label: "Surat" },
     ...(user?.role === "admin"
       ? [
           {
