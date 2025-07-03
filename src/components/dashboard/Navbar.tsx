@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import { FiLogOut } from "react-icons/fi";
 import { User } from "@/types";
+import Image from "next/image";
 interface NavbarProps {
   user: User | null;
 }
@@ -20,7 +21,14 @@ export default function Navbar({ user }: NavbarProps) {
     >
       <div className="flex items-center justify-between h-16 px-6">
         <div className="flex items-center ">
-          <h1 className="text-xl font-bold text-gray-800">SIMAS</h1>
+          <Image
+            src="/pict/image.png"
+            alt="Logo SIMAS"
+            width={32}
+            height={32}
+            className="mr-2"
+          />
+          <h1 className="text-xl font-bold text-gray-800"> SIMAS</h1>
         </div>
 
         <div className="flex items-center space-x-4">
