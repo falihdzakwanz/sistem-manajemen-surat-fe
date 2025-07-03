@@ -11,6 +11,7 @@ import LetterDetailSection from "@/components/dashboard/LetterDetailSection";
 import { formatToLocaleDate } from "@/utils/dateUtils";
 import FileViewerSection from "@/components/dashboard/FileViewerSection";
 import useAuth from "@/hooks/useAuth";
+import { FiChevronLeft, FiEdit } from "react-icons/fi";
 
 export default function LetterDetailPage() {
   const router = useRouter();
@@ -39,8 +40,10 @@ export default function LetterDetailPage() {
         <Button
           variant="primary"
           onClick={() => router.push("/dashboard/letters")}
+          className="flex items-center gap-1"
         >
-          Kembali ke Kotak Surat
+          <FiChevronLeft />
+          Kembali
         </Button>
       </div>
 
@@ -90,8 +93,9 @@ export default function LetterDetailPage() {
               onClick={() =>
                 router.push(`/dashboard/letters/${nomor_registrasi}/edit`)
               }
-              className="mt-6"
+              className="flex items-center gap-1 mt-6"
             >
+              <FiEdit />
               Edit
             </Button>
           )}

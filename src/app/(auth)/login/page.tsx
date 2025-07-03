@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import AnimatedDiv from "@/components/ui/AnimatedDiv";
 import LoginForm from "@/components/auth/LoginForm";
+import Image from "next/image";
 
 export default function LoginPage() {
   return (
@@ -15,10 +16,19 @@ export default function LoginPage() {
           className="bg-white rounded-xl shadow-lg p-8"
         >
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
-            <p className="text-gray-600 mt-2">Sign in to your account</p>
+            <Image
+              src="/pict/Logo.png"
+              alt="Logo SIMAS"
+              width={96}
+              height={96}
+              className="mx-auto w-1/4 mb-8"
+            />
+            <h1 className="text-2xl font-bold text-gray-800">
+              Selamat Datang Di SIMAS
+            </h1>
+            <p className="text-gray-600 mt-2">Masukkan Akun Anda</p>
           </div>
-          
+
           <LoginForm />
         </motion.div>
       </AnimatedDiv>

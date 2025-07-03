@@ -7,6 +7,7 @@ import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { Letter, User } from "@/types";
 import { formatToDDMMYYYY } from "@/utils/dateUtils";
+import { FiCornerDownLeft, FiSave } from "react-icons/fi";
 
 interface LetterFormProps {
   onSubmit: (formData: FormData) => Promise<void>;
@@ -156,15 +157,19 @@ export default function LetterForm({
           variant="primary"
           onClick={() => router.back()}
           disabled={loading}
+          className="flex items-center gap-1"
         >
-          Cancel
+          <FiCornerDownLeft />
+          Kembali
         </Button>
         <Button
           type="submit"
           disabled={loading}
           variant="success"
           loading={loading}
+          className="flex items-center gap-1"
         >
+          <FiSave />
           {loading ? "Menyimpan..." : "Simpan Surat"}
         </Button>
       </div>

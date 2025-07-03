@@ -131,7 +131,7 @@ export default function UserForm({
         variant="success"
         loading={loading}
       >
-        {isUpdateMode ? "Update User" : "Tambah User"}
+        {isUpdateMode ? "Update User" : "+ Tambah User"}
       </Button>
     </form>
   );

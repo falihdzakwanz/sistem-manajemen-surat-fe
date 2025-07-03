@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Button from "@/components/ui/Button"; // Pastikan path-nya sesuai dengan struktur folder kamu
+import Button from "@/components/ui/Button";
+import { FiDownload } from "react-icons/fi";
 
 export default function FileDownloadButton({
   nomorRegistrasi,
@@ -53,16 +54,16 @@ export default function FileDownloadButton({
   };
 
   return (
-    <div className="flex flex-col gap-2 mt-4">
+    <div className="flex flex-col gap-2 mt-6">
       <Button
         onClick={handleDownload}
         loading={isDownloading}
         loadingText="Mengunduh..."
         variant="success"
         size="md"
-        className="w-fit"
+        className="flex items-center gap-1 w-fit"
       >
-        Unduh Dokumen
+        <FiDownload /> Unduh Dokumen
       </Button>
       {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
     </div>
