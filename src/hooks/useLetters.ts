@@ -40,7 +40,6 @@ export default function useLetters() {
         setUser(currentUser);
         localStorage.setItem("user", JSON.stringify(currentUser));
 
-        // Fetch letters
         const letterResponse = await letterService.getLetters(
           currentUser.role === "user"
         );

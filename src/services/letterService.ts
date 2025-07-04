@@ -38,7 +38,7 @@ export const letterService = {
     try {
       const response = await fetch(`/api/surat/${nomorRegistrasi}/file`, {
         method: "GET",
-        credentials: "include", // Jika menggunakan auth
+        credentials: "include",
       });
 
       if (!response.ok) {

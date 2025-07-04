@@ -73,7 +73,6 @@ export default function DashboardPage() {
         </motion.div>
       </AnimatedDiv>
 
-      {/* Statistik Utama */}
       <div
         className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
           user?.role === "admin" ? "lg:grid-cols-2" : "lg:grid-cols-1"
@@ -109,7 +108,6 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Surat Terbaru */}
       <AnimatedDiv delay={0.1}>
         <motion.div
           whileHover={{ scale: 1.01 }}

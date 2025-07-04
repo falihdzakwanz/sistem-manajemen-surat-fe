@@ -69,18 +69,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ✅ Navbar tetap full width */}
       <div className="fixed top-0 left-0 right-0 h-16 z-50 bg-white shadow flex items-center px-4">
         <Navbar user={user} />
       </div>
 
-      {/* ✅ Sidebar mulai dari bawah navbar */}
       <div
         className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white shadow z-40 transition-all duration-300 overflow-y-auto ${
           isCollapsed ? "w-20" : "w-64"
         }`}
       >
-        {/* Tombol Collapse */}
         <div className="text-xl px-2">
           <div className="flex items-center p-3 rounded-lg">
             <button
@@ -92,7 +89,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </div>
 
-        {/* Menu */}
         <nav className="space-y-2 px-2">
           {navItems.map((item) => (
             <Link href={item.href} key={item.href}>
