@@ -17,7 +17,7 @@ export default function LoginPage() {
         >
           <div className="text-center mb-8">
             <Image
-              src="/pict/Logo.png"
+              src="/pict/Logo-Kominfo-Nama.png"
               alt="Logo SIMAS"
               width={96}
               height={96}

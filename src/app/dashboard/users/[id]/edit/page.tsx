@@ -21,7 +21,7 @@ export default function EditUserPage() {
       <AnimatedDiv>
         <motion.div className="bg-white rounded-xl shadow-md p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
-            {isEdit ? "Edit User" : "Add New User"}
+            {isEdit ? "Edit Penerima" : "Tambah Penerima Baru"}
           </h1>
 
           {error && (

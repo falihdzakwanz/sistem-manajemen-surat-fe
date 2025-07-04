@@ -4,6 +4,7 @@ import { useState } from "react";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { motion } from "framer-motion";
+import { FiRefreshCcw } from "react-icons/fi";
 
 interface UserFormProps {
   initialData?: {
@@ -131,7 +132,14 @@ export default function UserForm({
         variant="success"
         loading={loading}
       >
-        {isUpdateMode ? "Update User" : "+ Tambah User"}
+        {isUpdateMode ? (
+          <span className="flex items-center justify-center gap-2 w-full">
+            <FiRefreshCcw size={16} />
+            Update Penerima
+          </span>
+        ) : (
+          "+ Tambah User"
+        )}
       </Button>
     </form>
   );

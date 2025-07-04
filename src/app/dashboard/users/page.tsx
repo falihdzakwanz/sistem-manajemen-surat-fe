@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import useUsers from "@/hooks/useUsers";
 import useLetters from "@/hooks/useLetters";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FiEye } from "react-icons/fi";
 import useUserOperations from "@/hooks/useUserOperations";
 import { User } from "@/types";
 import { motion } from "framer-motion";
@@ -90,7 +91,7 @@ export default function UsersList() {
                 variant: "danger" as const,
               },
               {
-                icon: <FaEdit size={16} />,
+                icon: <FiEye size={16} />,
                 onClick: () => router.push(`/dashboard/users/${user.id}`),
                 label: "Detail",
                 variant: "primary" as const,

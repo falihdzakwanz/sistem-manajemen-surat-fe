@@ -84,9 +84,20 @@ export default function HomePage() {
             ))}
           </div>
 
-          <footer className="text-xs text-gray-500 mt-4">
-            &copy; {new Date().getFullYear()} SIMAS - Komdigi Pemerintah Kota
-            Bandar Lampung
+          <footer className="text-xs text-gray-500 mt-4 text-center pt-6">
+            &copy; {new Date().getFullYear()} SIMAS - KOMINFO Pemerintah Kota
+            Bandar Lampung.
+            <br />
+            Dikembangkan oleh tim magang: Falih, Bayu, Sakti, Fadhil dari
+            Institut Teknologi Sumatera.{" "}
+            <a
+              href="https://github.com/username"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              Lihat di GitHub
+            </a>
           </footer>
         </motion.div>
       </section>

@@ -22,7 +22,7 @@ export default function Navbar({ user }: NavbarProps) {
       <div className="flex items-center justify-between h-16 px-6">
         <div className="flex items-center ">
           <Image
-            src="/pict/image.png"
+            src="/pict/Logo-Kominfo.png"
             alt="Logo SIMAS"
             width={32}
             height={32}

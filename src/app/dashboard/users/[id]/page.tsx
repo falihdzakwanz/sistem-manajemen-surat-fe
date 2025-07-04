@@ -11,6 +11,7 @@ import { useState } from "react";
 import { formatToLocaleDate } from "@/utils/dateUtils";
 import useLetters from "@/hooks/useLetters";
 import LetterCard from "@/components/dashboard/LetterCard";
+import { FiEdit2, FiTrash, FiChevronLeft } from "react-icons/fi";
 
 export default function ReceiverDetailPage() {
   const router = useRouter();
@@ -76,7 +77,9 @@ export default function ReceiverDetailPage() {
           Detail Penerima
         </motion.h1>
         <Link href="/dashboard/users">
-          <Button variant="primary">Kembali ke Daftar Penerima</Button>
+          <Button variant="primary" className="flex items-center gap-1">
+            <FiChevronLeft /> Kembali
+          </Button>
         </Link>
       </div>
 
@@ -125,10 +128,16 @@ export default function ReceiverDetailPage() {
 
           <div className="mt-6 flex space-x-3">
             <Link href={`/dashboard/users/${user.id}/edit`}>
-              <Button variant="warning">Edit</Button>
+              <Button variant="warning" className="flex items-center gap-1">
+                <FiEdit2 className="mr-2" /> Edit
+              </Button>
             </Link>
-            <Button variant="danger" onClick={() => setIsDeleteModalOpen(true)}>
-              Hapus
+            <Button
+              variant="danger"
+              className="flex items-center gap-1"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              <FiTrash className="mr-2" /> Hapus
             </Button>
           </div>
         </motion.div>
