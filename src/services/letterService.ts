@@ -34,35 +34,6 @@ export const letterService = {
     return apiClient.put(`/api/surat/${id}`, formData);
   },
 
-  async downloadLetterFile(nomorRegistrasi: number) {
-    try {
-      const response = await fetch(`/api/surat/${nomorRegistrasi}/file`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const contentDisposition = response.headers.get("content-disposition");
-      const filename = contentDisposition
-        ? contentDisposition.split("filename=")[1].replace(/"/g, "")
-        : `surat-${nomorRegistrasi}.pdf`;
-
-      return { blob, filename };
-    } catch (error) {
-      console.error("Download error:", error);
-      throw new Error(
-        "Koneksi gagal. Periksa:\n" +
-          "1. Koneksi internet Anda\n" +
-          "2. Apakah server API sedang online\n" +
-          "3. Ekstensi browser yang mungkin memblokir request"
-      );
-    }
-  },
-
   async deleteLetter(nomorRegistrasi: number) {
     return apiClient.delete(`/api/surat/${nomorRegistrasi}`);
   },

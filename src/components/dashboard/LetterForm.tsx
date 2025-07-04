@@ -41,7 +41,6 @@ export default function LetterForm({
       formData.set("tanggal_masuk", formatToDDMMYYYY(rawTanggalMasuk));
     }
 
-    // Add current file URL if no new file is selected
     if (initialData?.file_url && !formData.get("file")) {
       formData.set("file_url", initialData.file_url);
     }

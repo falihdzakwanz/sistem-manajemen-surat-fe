@@ -32,7 +32,6 @@ export const convertDateFormat = (
 
   const parts = dateString.split("-");
 
-  // Validate format
   if (
     fromFormat === "DD-MM-YYYY" &&
     (parts.length !== 3 ||
@@ -53,7 +52,6 @@ export const convertDateFormat = (
     return "";
   }
 
-  // Convert between formats
   if (fromFormat === toFormat) return dateString;
 
   return fromFormat === "DD-MM-YYYY"

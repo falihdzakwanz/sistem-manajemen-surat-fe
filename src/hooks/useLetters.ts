@@ -34,7 +34,6 @@ export default function useLetters() {
         setLoading(true);
         setError(null);
 
-        // Fetch user
         const userResponse = await apiClient.get("/api/users/current");
         const currentUser = userResponse.data;
         setUser(currentUser);
