@@ -83,24 +83,75 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-
-          <footer className="text-xs text-gray-500 mt-4 text-center pt-6">
-            &copy; {new Date().getFullYear()} SIMAS - KOMINFO Pemerintah Kota
-            Bandar Lampung.
-            <br />
-            Dikembangkan oleh tim magang: Falih, Bayu, Sakti, Fadhil dari
-            Institut Teknologi Sumatera.{" "}
-            <a
-              href="https://github.com/username"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              Lihat di GitHub
-            </a>
-          </footer>
+          <Footer />
         </motion.div>
       </section>
     </main>
   );
 }
+
+const Footer = () => {
+  const developers = [
+    { name: "Falih Dzakwan Zuhdi", url: "https://github.com/falihdzakwanz" },
+    { name: "Bayu Ega Ferdana", url: "https://github.com/bayuega" },
+    { name: "Sakti Mujahid Imani", url: "https://github.com/Sakti-122140123" },
+    {
+      name: "Muhammad Fadhil Zurani",
+      url: "https://github.com/mfadhilzurani122140146",
+    },
+  ];
+
+  return (
+    <motion.footer
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="text-xs text-gray-500 mt-4 text-center pt-6 leading-relaxed space-y-2"
+    >
+      <p>
+        &copy; {new Date().getFullYear()} SIMAS - KOMINFO Pemerintah Kota Bandar
+        Lampung.
+      </p>
+
+      <p>Daftar Pengembang</p>
+
+      <div className="flex justify-center items-center flex-wrap gap-x-2 mt-1">
+        {developers.map((dev, index) => (
+          <div key={dev.url} className="flex items-center">
+            <motion.a
+              href={dev.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline text-gray-600 hover:text-blue-500 transition-colors duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {dev.name}
+            </motion.a>
+            {index < developers.length - 1 && (
+              <motion.span
+                className="text-black text-sm mx-2"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+              >
+                •
+              </motion.span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-2">
+        <a
+          href="http://if.itera.ac.id/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline text-gray-600 hover:text-blue-500 transition-colors duration-300 inline-block"
+        >
+          Teknik Informatika
+        </a>
+        <span> - Institut Teknologi Sumatera.</span>
+      </div>
+    </motion.footer>
+  );
+};
