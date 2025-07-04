@@ -43,21 +43,21 @@ export const apiClient = {
     return this.request(endpoint, { method: "GET" });
   },
 
-  async post(endpoint: string, body: any) {
+  async post<T = unknown>(endpoint: string, body: T) {
     return this.request(endpoint, {
       method: "POST",
       body: JSON.stringify(body),
     });
   },
 
-  async put(endpoint: string, body: any) {
+  async put<T = unknown>(endpoint: string, body: T) {
     return this.request(endpoint, {
       method: "PUT",
       body: body instanceof FormData ? body : JSON.stringify(body),
     });
   },
 
-  async patch(endpoint: string, body: any) {
+  async patch<T = unknown>(endpoint: string, body: T) {
     return this.request(endpoint, {
       method: "PATCH",
       body: JSON.stringify(body),
