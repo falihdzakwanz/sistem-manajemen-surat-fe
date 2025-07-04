@@ -18,7 +18,7 @@ export default function LetterEditPage() {
     letter,
     loading: letterLoading,
     error: letterError,
-  } = useLetterDetail(nomor_registrasi as string);
+  } = useLetterDetail();
   const { users, loading: usersLoading, error: usersError } = useUsers();
 
   const [submitLoading, setSubmitLoading] = useState(false);

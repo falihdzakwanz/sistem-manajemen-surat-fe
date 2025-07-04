@@ -5,14 +5,14 @@ import { User } from "@/types";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { userService } from "@/services/userService"; // Sesuaikan path import
+import { userService } from "@/services/userService";
 
 interface ProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   user: User | null;
-  onProfileUpdate?: (updatedUser: User) => void; // Optional callback untuk update UI
-  onSuccess?: () => void; // Optional callback untuk success feedback
+  onProfileUpdate?: (updatedUser: User) => void;
+  onSuccess?: () => void;
 }
 
 export default function ProfileModal({
@@ -30,7 +30,6 @@ export default function ProfileModal({
 
   if (!user) return null;
 
-  // Reset form ketika modal dibuka/ditutup
   const handleClose = () => {
     setNewPassword("");
     setConfirmPassword("");
@@ -69,41 +68,32 @@ export default function ProfileModal({
     setIsLoading(true);
 
     try {
-      // Menggunakan userService yang sudah ada
       const response = await userService.updateProfile({
         password: newPassword,
       });
 
-      // Jika ada callback untuk update UI
       if (onProfileUpdate && response.data) {
         onProfileUpdate(response.data);
       }
 
-      // Tampilkan success message
       setShowSuccess(true);
 
-      // Optional callback untuk success
       if (onSuccess) {
         onSuccess();
       }
 
-      // Auto close setelah 2 detik atau biarkan user close manual
       setTimeout(() => {
         handleClose();
       }, 2000);
-    } catch (err: any) {
-      // Handle error response dari API
-      const errorMessage =
-        err.response?.data?.message ||
-        err.message ||
-        "Terjadi kesalahan saat mengubah password.";
+    } catch (err) {
+      console.error("Error updating password:", err);
+      const errorMessage = "Terjadi kesalahan saat mengubah password.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle Enter key untuk submit
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !isLoading) {
       handleSubmit();

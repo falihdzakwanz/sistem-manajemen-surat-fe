@@ -16,10 +16,6 @@ export default function ProfilePage() {
   const [loadingLetters, setLoadingLetters] = useState(true);
   const { user, loading } = useAuth();
 
-  // Check if user role is 'user' to hide outgoing letters
-  const isUserRole = user?.role === "user";
-
-  // Fetch user's letter statistics using dashboardService
   useEffect(() => {
     const fetchUserLetters = async () => {
       if (!user) return;

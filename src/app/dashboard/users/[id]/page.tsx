@@ -20,7 +20,6 @@ export default function ReceiverDetailPage() {
   const {
     userData: user,
     loading,
-    error,
     deleteUser,
     isDeleting,
     deleteError,
