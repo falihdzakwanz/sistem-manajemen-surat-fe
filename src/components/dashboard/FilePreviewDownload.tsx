@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiFileText } from "react-icons/fi";
+import Cookies from "js-cookie";
 
 export function FilePreviewDownload({
   nomorRegistrasi,
@@ -9,42 +10,49 @@ export function FilePreviewDownload({
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    setIsDownloading(true);
+  e.preventDefault();
+  setIsDownloading(true);
 
-    try {
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-      const token = Cookies.getItem("token");
+  try {
+    const API_BASE_URL =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+    const token = Cookies.get("token");
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/surat/${nomorRegistrasi}/file`,
-        {
-          headers: {
-            "X-API-TOKEN": `${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Gagal mengunduh file.");
+    const response = await fetch(
+      `${API_BASE_URL}/api/surat/${nomorRegistrasi}/file`,
+      {
+        headers: {
+          "X-API-TOKEN": `${token}`,
+        },
       }
+    );
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `surat-${nomorRegistrasi}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("Terdapat kesalahan saat mengunduh file", err);
-    } finally {
-      setIsDownloading(false);
+    if (!response.ok) {
+      throw new Error("Gagal mengunduh file.");
     }
-  };
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    // Ambil nama file asli dari header Content-Disposition
+    const contentDisposition = response.headers.get("Content-Disposition");
+    const match = contentDisposition?.match(/filename="?([^"]+)"?/);
+    const originalFileName = match?.[1] || `surat-${nomorRegistrasi}.pdf`;
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = originalFileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Terdapat kesalahan saat mengunduh file", err);
+  } finally {
+    setIsDownloading(false);
+  }
+};
+
 
   return (
     <a
