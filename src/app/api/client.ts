@@ -1,9 +1,10 @@
+import Cookies from "js-cookie";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export const apiClient = {
   async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
 
     const headers = new Headers();
 
@@ -28,8 +29,8 @@ export const apiClient = {
 
     if (!response.ok) {
       if (response.status === 401) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        Cookies.remove("token");
+        Cookies.remove("user");
       }
 
       const errorData = await response.json().catch(() => ({}));
@@ -69,7 +70,7 @@ export const apiClient = {
   },
 
   async upload(endpoint: string, formData: FormData) {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "POST",
       headers: {

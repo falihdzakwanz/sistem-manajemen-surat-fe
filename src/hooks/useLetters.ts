@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Letter, User } from "@/types";
 import { letterService } from "@/services/letterService";
 import { apiClient } from "@/app/api/client";
+import Cookies from "js-cookie";
 
 export default function useLetters() {
   const [letters, setLetters] = useState<Letter[]>([]);
@@ -37,7 +38,7 @@ export default function useLetters() {
         const userResponse = await apiClient.get("/api/users/current");
         const currentUser = userResponse.data;
         setUser(currentUser);
-        localStorage.setItem("user", JSON.stringify(currentUser));
+        Cookies.set("user", JSON.stringify(currentUser));
 
         const letterResponse = await letterService.getLetters(
           currentUser.role === "user"
@@ -46,8 +47,8 @@ export default function useLetters() {
       } catch (err) {
         setError("Failed to fetch user or letters");
         console.error("Error:", err);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        Cookies.remove("token");
+        Cookies.remove("user");
       } finally {
         setLoading(false);
       }

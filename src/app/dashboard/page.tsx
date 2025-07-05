@@ -12,7 +12,7 @@ import { dashboardService } from "@/services/dashboardService";
 
 type DashboardStats = {
   totalSurat: number;
-  totalUsers?: number; // Only for admin
+  totalUsers?: number;
   recentLetters: Array<{
     id: number;
     nomor_surat: string;

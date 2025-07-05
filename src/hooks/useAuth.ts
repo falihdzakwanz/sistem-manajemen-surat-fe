@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { apiClient } from "@/app/api/client";
 import { User } from "@/types";
+import Cookies from "js-cookie";
 
 export default function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -11,27 +12,22 @@ export default function useAuth() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const userCookie = Cookies.get("user");
+
+    if (!userCookie) {
       setLoading(false);
       return;
     }
 
-    const fetchUser = async () => {
-      try {
-        const response = await apiClient.get("/api/users/current");
-        setUser(response.data);
-        localStorage.setItem("user", JSON.stringify(response.data));
-      } catch (error) {
-        console.error("Failed to fetch user", error);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
+    try {
+      const parsedUser = JSON.parse(userCookie);
+      setUser(parsedUser);
+    } catch (err) {
+      console.error("Failed to parse user cookie:", err);
+      Cookies.remove("user");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -41,14 +37,16 @@ export default function useAuth() {
         password,
       });
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      setUser(response.data.user);
+      const { token, user: userData } = response.data;
 
-      return response.data.user;
+      Cookies.set("token", token, { expires: 1 });
+      Cookies.set("user", JSON.stringify(userData), { expires: 1 });
+
+      setUser(userData);
+      return userData;
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Invalid email or password"
+        error instanceof Error ? error.message : "Email atau password salah"
       );
     }
   };
@@ -60,8 +58,8 @@ export default function useAuth() {
       console.error("Logout error:", error);
     }
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    Cookies.remove("token");
+    Cookies.remove("user");
     setUser(null);
     router.push("/login");
   };
